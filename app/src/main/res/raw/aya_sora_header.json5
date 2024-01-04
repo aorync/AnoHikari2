@@ -1,0 +1,152 @@
+
+{
+  ConstraintSets: {
+    start: {
+      box: {
+        width: 'spread',
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+        top: ['parent', 'top'],
+        bottom: ['parent', 'bottom'],
+      },
+      back_btn: {
+        start: ['box', 'start', 16],
+        top: ['box' , 'top', 16],
+      },
+      sora_ar_txt: {
+        start: ['box', 'start'],
+        end: ['box', 'end'],
+        top: ['box', 'top', 24],
+      },
+      play_sora_btn: {
+        start: ['sora_ar_txt', 'start'],
+        end: ['sora_ar_txt', 'end'],
+        top: ['sora_ar_txt', 'bottom', 4],
+      },
+      sora_en_txt: {
+        start: ['box', 'start', 16],
+        top: ['play_sora_btn', 'bottom', 24],
+      },
+      sora_descend_txt: {
+        end: ['box', 'end', 16],
+        top: ['sora_en_txt', 'top'],
+        bottom: ['sora_en_txt', 'bottom'],
+      },
+      sora_id_txt: {
+        start: ['box', 'start', 16],
+        top: ['sora_en_txt', 'bottom', 4],
+        bottom: ['box', 'bottom', 16],
+      },
+      ayahs_text: {
+        end: ['box', 'end', 16],
+        top: ['sora_descend_txt', 'bottom', 4],
+        bottom: ['box', 'bottom', 16],
+      }
+    },
+    end: {
+      box: {
+        width: 'spread',
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+        top: ['parent', 'top'],
+        bottom: ['parent', 'bottom'],
+      },
+      back_btn: {
+        start: ['box', 'start', 16],
+        top: ['box' , 'top', 16],
+        bottom: ['box', 'bottom', 16],
+      },
+      sora_ar_txt: {
+        start: ['box', 'start'],
+        end: ['box', 'end'],
+        top: ['box', 'top'],
+      },
+      sora_en_txt: {
+        start: ['back_btn', 'end', 8],
+        top: ['back_btn', 'top'],
+        bottom: ['back_btn', 'bottom'],
+      },
+      play_sora_btn: {
+        end: ['box', 'end', 16],
+        top: ['back_btn', 'top', 0],
+        bottom: ['back_btn', 'bottom', 0],
+      },
+      sora_descend_txt: {
+        end: ['box', 'end', 16],
+        top: ['sora_en_txt', 'top'],
+        bottom: ['sora_en_txt', 'bottom'],
+      },
+      sora_id_txt: {
+        start: ['box', 'start', 16],
+        top: ['sora_en_txt', 'bottom', 4],
+        bottom: ['box', 'bottom', 16],
+      },
+      ayahs_text: {
+        end: ['box', 'end', 16],
+        top: ['sora_descend_txt', 'bottom', 4],
+        bottom: ['box', 'bottom', 16],
+      }
+    }
+  },
+  Transitions: {
+    default: {
+      from: 'start',
+      to: 'end',
+      pathMotionArc: 'startVertical',
+      KeyFrames: {
+        KeyAttributes: [
+          {
+            target: ['box'],
+            frames: [0, 20, 50, 80, 100],
+          },
+          {
+            target: ['back_btn'],
+            frames: [0, 100],
+          },
+          {
+            target: ['sora_ar_txt'],
+            frames: [0, 20, 40, 60, 80, 100],
+            scaleX: [1, 0.8, 0.4, 0],
+            scaleY: [1, 0.8, 0.4, 0],
+            alpha: [1, 0.8, 0.4, 0],
+          },
+          {
+            target: ['sora_en_txt'],
+            frames: [0, 20, 40, 60, 80, 100],
+            scaleX: [1, 1.4, 1.8, 2],
+            scaleY: [1, 1.4, 1.8, 2],
+            alpha: [1, 1.4, 1.8, 2],
+          },
+          {
+            target: ['play_sora_btn'],
+            frames: [0, 20, 40, 60, 80, 100],
+            scaleX: [1, 1.4, 1.8, 2],
+            scaleY: [1, 1.4, 1.8, 2],
+            alpha: [1, 1.4, 1.8, 2],
+          },
+          {
+            target: ['sora_descend_txt'],
+            frames: [0, 20, 40, 60, 80, 100],
+            scaleX: [1, 0.8, 0.4, 0],
+            scaleY: [1, 0.8, 0.4, 0],
+            alpha: [1, 0.8, 0.4, 0],
+          },
+          {
+            target: ['sora_id_txt'],
+            frames: [0, 20, 40, 60, 80, 100],
+            scaleX: [1, 0.8, 0.4, 0],
+            scaleY: [1, 0.8, 0.4, 0],
+            alpha: [1, 0.8, 0.4, 0],
+          },
+          {
+            target: ['ayahs_txt'],
+            frames: [0, 20, 40, 60, 80, 100],
+            scaleX: [1, 0.8, 0.4, 0],
+            scaleY: [1, 0.8, 0.4, 0],
+            alpha: [1, 0.8, 0.4, 0],
+          }
+        ],
+      }
+    }
+  }
+}

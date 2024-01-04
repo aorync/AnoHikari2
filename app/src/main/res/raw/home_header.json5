@@ -1,0 +1,79 @@
+{
+  ConstraintSets: {
+    start: {
+      box: {
+        height: 230,
+        width: 'spread',
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+      },
+      app_name: {
+        top: ['box', 'top', 16],
+        start: ['box', 'start'],
+        end: ['box', 'end'],
+      },
+      actions_btn: {
+        end: ['box', 'end', 16],
+        top: ['app_name', 'top'],
+        bottom: ['app_name', 'bottom'],
+      },
+      recent_read_card: {
+        end: ['box', 'end', 8],
+        bottom: ['box', 'bottom', 8],
+      }
+    },
+    end: {
+      box: {
+        height: 56,
+        width: 'spread',
+        start: ['parent', 'start'],
+        end: ['parent', 'end'],
+      },
+      app_name: {
+        top: ['box', 'top', 16],
+        start: ['box', 'start'],
+        end: ['box', 'end'],
+        bottom: ['box', 'bottom', 16],
+      },
+      actions_btn: {
+        end: ['box', 'end', 16],
+        top: ['app_name', 'top'],
+        bottom: ['app_name', 'bottom'],
+      },
+      recent_read_card: {
+        end: ['box', 'end', 8],
+        bottom: ['box', 'bottom', 8],
+      }
+    }
+  },
+  Transitions: {
+    default: {
+      from: 'start',
+      to: 'end',
+      pathMotionArc: 'startVertical',
+      KeyFrames: {
+        KeyAttributes: [
+          {
+            target: ['box'],
+            frames: [0, 20, 60, 80, 100],
+        },
+          {
+            target: ['app_name'],
+            frames: [0, 100],
+          },
+          {
+            target: ['actions_btn'],
+            frames: [0, 100],
+          },
+          {
+            target: ['recent_read_card'],
+            frames: [0, 20, 40, 60, 80, 100],
+            scaleY: [1, 0.8, 0.6, 0.4, 0.2, 0],
+            scaleX: [1, 0.8, 0.6, 0.4, 0.2, 0],
+            alpha: [1, 0.8, 0.6, 0.4, 0.2, 0],
+          }
+        ],
+      }
+    }
+  }
+}
