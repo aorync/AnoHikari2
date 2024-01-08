@@ -74,7 +74,7 @@ fun ReadScreen(
                                     soraEnName = qoran.soraEn ?: "",
                                     soraIdName = qoran.soraId ?: "",
                                     soraDescend = qoran.soraPlace ?: "",
-                                    ayas = totalAyas?.get(index) ?: 0
+                                    ayas = totalAyas?.get(qoran.soraNo?.minus(1) ?: 0) ?: 0
                                 )
                             }
                             AyaReadItem(

@@ -12,12 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.manualcomposablecalls.composable
+import com.ramcosta.composedestinations.navigation.dependency
 import com.syntxr.anohikari2.presentation.NavGraphs
-import com.syntxr.anohikari2.presentation.destinations.HomeScreenDestination
-import com.syntxr.anohikari2.presentation.destinations.ReadScreenDestination
-import com.syntxr.anohikari2.presentation.home.HomeScreen
-import com.syntxr.anohikari2.presentation.read.ReadScreen
 
 
 import com.syntxr.anohikari2.ui.theme.AnoHikariTheme
@@ -36,26 +32,17 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val sharedViewModel : AnoHikariSharedViewModel = viewModel(LocalContext.current as ComponentActivity)
+                    val sharedViewModel: AnoHikariSharedViewModel =
+                        viewModel(LocalContext.current as ComponentActivity)
 
                     Scaffold {
                         DestinationsNavHost(
                             navGraph = NavGraphs.root,
+                            dependenciesContainerBuilder = {
+                                dependency(viewModel<AnoHikariSharedViewModel>(LocalContext.current as ComponentActivity))
+                            },
                             modifier = Modifier.padding(it),
-                        ){
-                            composable(HomeScreenDestination){
-                                HomeScreen(
-                                    navigator = destinationsNavigator,
-                                    sharedViewModel = sharedViewModel
-                                )
-                            }
-                            composable(ReadScreenDestination){
-                                ReadScreen(
-                                    navigator = destinationsNavigator,
-                                    sharedViewModel = sharedViewModel
-                                )
-                            }
-                        }
+                        )
                     }
                 }
             }
