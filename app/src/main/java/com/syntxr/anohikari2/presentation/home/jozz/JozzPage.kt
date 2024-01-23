@@ -20,9 +20,9 @@ import com.syntxr.anohikari2.utils.getJozzSoras
 @Composable
 fun JozzPage(
     jozzes: List<Jozz>,
-    modifier: Modifier = Modifier,
     navigation: (soraNo: Int?, jozzNo: Int?, indexType: Int, scrollPos: Int?) -> Unit,
     lazyState: LazyListState,
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         state = lazyState,

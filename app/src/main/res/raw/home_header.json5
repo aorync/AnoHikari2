@@ -12,7 +12,12 @@
         start: ['box', 'start'],
         end: ['box', 'end'],
       },
-      actions_btn: {
+      hamburger_btn: {
+        start: ['box', 'start', 16],
+        top: ['app_name', 'top'],
+        bottom: ['app_name', 'bottom'],
+      },
+      search_btn: {
         end: ['box', 'end', 16],
         top: ['app_name', 'top'],
         bottom: ['app_name', 'bottom'],
@@ -35,7 +40,12 @@
         end: ['box', 'end'],
         bottom: ['box', 'bottom', 16],
       },
-      actions_btn: {
+      hamburger_btn: {
+        start: ['box', 'start', 16],
+        top: ['app_name', 'top'],
+        bottom: ['app_name', 'bottom'],
+      },
+      search_btn: {
         end: ['box', 'end', 16],
         top: ['app_name', 'top'],
         bottom: ['app_name', 'bottom'],
@@ -62,7 +72,11 @@
             frames: [0, 100],
           },
           {
-            target: ['actions_btn'],
+            target: ['hamburger_btn'],
+            frames: [0, 100],
+          },
+          {
+            target: ['search_btn'],
             frames: [0, 100],
           },
           {

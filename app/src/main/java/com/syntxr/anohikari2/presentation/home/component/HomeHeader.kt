@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Card
@@ -51,6 +52,7 @@ import com.syntxr.anohikari2.ui.theme.ubuntuMonoFontFamily
 fun HomeHeader(
     lazyListState: LazyListState,
     time: Time,
+    openDrawer: () -> Unit,
 ) {
     val context = LocalContext.current
     val motionScene = remember {
@@ -83,21 +85,21 @@ fun HomeHeader(
                     painterResource(
                         id =
 
-                        if (time.midnight){
+                        if (time.midnight) {
                             R.drawable.midnight_sky
-                        }else if (time.dusk){
+                        } else if (time.dusk) {
                             R.drawable.dusk_sky
-                        }else if(time.day){
+                        } else if (time.day) {
                             R.drawable.day_sky
-                        }else if(time.noon){
+                        } else if (time.noon) {
                             R.drawable.noon_sky
-                        }else if (time.afternoon){
+                        } else if (time.afternoon) {
                             R.drawable.afternoon_sky
-                        }else if(time.dawn){
+                        } else if (time.dawn) {
                             R.drawable.dawn_sky
-                        }else if (time.night){
+                        } else if (time.night) {
                             R.drawable.night_sky
-                        }else{
+                        } else {
                             R.drawable.midnight_sky
                         }
                     ),
@@ -124,29 +126,29 @@ fun HomeHeader(
             )
         }
 
-        Row(
-            modifier = Modifier.layoutId("actions_btn"),
-            verticalAlignment = Alignment.CenterVertically
+        IconButton(
+            modifier = Modifier.layoutId("hamburger_btn"),
+            onClick = openDrawer
         ) {
-            IconButton(
-                onClick = { /*TODO*/ }
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Settings,
-                    contentDescription = "btn settings",
-                    tint = Color.White
-                )
-            }
-            IconButton(
-                onClick = { /*TODO*/ }
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Search,
-                    contentDescription = "btn search",
-                    tint = Color.White
-                )
-            }
+            Icon(
+                imageVector = Icons.Rounded.Menu,
+                contentDescription = "Hamburger",
+                tint = Color.White
+            )
         }
+
+
+        IconButton(
+            modifier = Modifier.layoutId("search_btn"),
+            onClick = { /*TODO*/ }
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.Search,
+                contentDescription = "btn search",
+                tint = Color.White
+            )
+        }
+
 
         Card(
             modifier = Modifier.layoutId("recent_read_card"),

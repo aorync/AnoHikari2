@@ -42,7 +42,7 @@ fun ReadTopBar(
 ){
     val density = LocalDensity.current
     AnimatedVisibility(
-        visible = !lazyListState.isScrolled,
+        visible = !lazyListState.isScrollInProgress,
         enter = slideInVertically {
             with(density){ -150.dp.roundToPx() }
         } + expandVertically(expandFrom = Alignment.Top)

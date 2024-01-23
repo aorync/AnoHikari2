@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -26,6 +28,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val keyStoreFile = project.rootProject.file("local.properties")
+        val properties = Properties()
+        properties.load(keyStoreFile.inputStream())
+
+        buildConfigField("String", "AUDIO_URL", "\"${properties.getProperty("AUDIO_URL")}\"")
     }
 
     buildTypes {
@@ -46,6 +54,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -90,10 +99,7 @@ dependencies {
     ksp("androidx.room:room-compiler:2.6.1")
 
     //    Destination
-    implementation("io.github.raamcosta.compose-destinations:core:1.9.54")
-
-    //    Destination
-    implementation("io.github.raamcosta.compose-destinations:core:1.9.54")
+    implementation("io.github.raamcosta.compose-destinations:animations-core:1.9.54")
     ksp("io.github.raamcosta.compose-destinations:ksp:1.9.54")
 
 //    dagger - hilt
@@ -101,4 +107,13 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
     ksp("com.google.dagger:hilt-android-compiler:2.49")
     ksp("androidx.hilt:hilt-compiler:1.1.0")
+
+//    snow player
+    implementation("com.github.jrfeng.snow:player:1.2.13")
+
+//    kotpref
+    implementation("com.chibatching.kotpref:kotpref:2.13.2")
+    implementation("com.chibatching.kotpref:initializer:2.13.2")
+    implementation("com.chibatching.kotpref:enum-support:2.13.2")
+
 }

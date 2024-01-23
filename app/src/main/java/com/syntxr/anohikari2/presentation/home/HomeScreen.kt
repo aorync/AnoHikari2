@@ -33,19 +33,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.navigate
 import com.syntxr.anohikari2.AnoHikariSharedViewModel
 import com.syntxr.anohikari2.presentation.destinations.ReadScreenDestination
+import com.syntxr.anohikari2.presentation.home.bookmark.BookmarkPage
 import com.syntxr.anohikari2.presentation.home.component.HomeHeader
 import com.syntxr.anohikari2.presentation.home.jozz.JozzPage
 import com.syntxr.anohikari2.presentation.home.sora.SoraPage
 import com.syntxr.anohikari2.presentation.read.ReadScreenNavArgs
-import com.syntxr.anohikari2.ui.theme.AnoHikariTheme
 import kotlinx.coroutines.launch
 
 @RootNavGraph(start = true)
@@ -55,9 +56,11 @@ import kotlinx.coroutines.launch
 )
 @Composable
 fun HomeScreen(
-    navigator: DestinationsNavigator,
+    openDrawer: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
     sharedViewModel: AnoHikariSharedViewModel,
+//    navController: NavHostController,
+    navigator: DestinationsNavigator
 ) {
 
     val state = viewModel.state.value
@@ -119,6 +122,27 @@ fun HomeScreen(
                     }
                 )
             }
+        ),
+        TabItem(
+            title = "Bookmark",
+            content = {
+                BookmarkPage(
+                    lazyState = lazyColumnState,
+                    bookmarks = state.bookmarks ?: emptyList(),
+                    navigation = {soraNo, jozzNo, indexType, scrollPos ->
+                        navigator.navigate(
+                            ReadScreenDestination(
+                                ReadScreenNavArgs(
+                                    soraNumber = soraNo,
+                                    jozzNumber = jozzNo,
+                                    indexType = indexType,
+                                    scrollPosition = scrollPos,
+                                )
+                            )
+                        )
+                    }
+                )
+            }
         )
     )
     val pagerState = rememberPagerState(pageCount = { tabItems.size })
@@ -137,7 +161,8 @@ fun HomeScreen(
 
             HomeHeader(
                 lazyListState = lazyColumnState,
-                time = viewModel.hourTime.value
+                time = viewModel.getTime(),
+                openDrawer = openDrawer
             )
 
             Card(
@@ -224,15 +249,6 @@ fun HomeScreen(
     }
 }
 
-@Preview
-@Composable
-fun HomeScreenPreview() {
-    AnoHikariTheme(
-        darkTheme = true
-    ) {
-//        HomeScreen()
-    }
-}
 
 data class TabItem(
     val title: String,

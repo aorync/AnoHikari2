@@ -32,18 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val sharedViewModel: AnoHikariSharedViewModel =
-                        viewModel(LocalContext.current as ComponentActivity)
-
-                    Scaffold {
-                        DestinationsNavHost(
-                            navGraph = NavGraphs.root,
-                            dependenciesContainerBuilder = {
-                                dependency(viewModel<AnoHikariSharedViewModel>(LocalContext.current as ComponentActivity))
-                            },
-                            modifier = Modifier.padding(it),
-                        )
-                    }
+                    AnoHikariApp()
                 }
             }
         }

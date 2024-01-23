@@ -83,7 +83,7 @@ fun JozzItem(
                                 sorasNo[index],
                                 null,
                                 AYA_BY_JOZZ_SORA,
-                                ayasNo[index]
+                                ayasNo[index]?.minus(1)
                             )
                         },
                         sora = soras[index] ?: "",
@@ -124,7 +124,7 @@ fun JozzSorasItem(
             ) {
                 Text(
                     text = "$soraNo",
-                    style = MaterialTheme.typography.titleSmall,
+                    style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     fontFamily = novaMonoFontFamily,
                     color = MaterialTheme.colorScheme.onSurface
@@ -135,7 +135,7 @@ fun JozzSorasItem(
 
             Text(
                 text = sora,
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 fontFamily = rubikFontFamily,
                 color = MaterialTheme.colorScheme.onSurface,
