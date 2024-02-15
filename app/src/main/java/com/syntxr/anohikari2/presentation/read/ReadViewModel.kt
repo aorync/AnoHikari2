@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.syntxr.anohikari2.R
 import com.syntxr.anohikari2.domain.model.Bookmark
 import com.syntxr.anohikari2.domain.model.Qoran
 import com.syntxr.anohikari2.domain.usecase.AppUseCase
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import snow.player.PlayMode
 import snow.player.PlayerClient
+import snow.player.audio.MusicItem
 import snow.player.playlist.Playlist
 import javax.inject.Inject
 
@@ -44,11 +46,21 @@ class ReadViewModel @Inject constructor(
 
     private val bookmarks = mutableListOf<Int>()
     private val checkBookmark = MutableLiveData<List<Int>>()
+
     private val _isAudioPlay = MutableStateFlow(playerClient.isPlaying)
     val isAudioPlay = _isAudioPlay.asStateFlow()
-    private val _currentAyaPlay = MutableStateFlow(0)
-    val currentAyaPlay = _currentAyaPlay.asStateFlow()
+
+    private val _currentAyaPlayId = MutableStateFlow(0)
+    val currentAyaPlayId = _currentAyaPlayId.asStateFlow()
+
+    private val _currentAyaPlayName = MutableStateFlow("")
+    val currentPlayAyaName = _currentAyaPlayName.asStateFlow()
+
+    private val _uiEvent = MutableStateFlow<ReadUiEvent?>(null)
+    val uiEvent = _uiEvent.asStateFlow()
+
     val playMode = mutableStateOf(PlayMode.SINGLE_ONCE)
+    val playType = mutableStateOf(PlayType.NONE)
 
     private val _state = mutableStateOf(ReadAyaState())
     val state: State<ReadAyaState> = _state
@@ -100,12 +112,14 @@ class ReadViewModel @Inject constructor(
                 AppGlobalActions.copyAction(
                     event.context, event.ayaNo, event.soraEn, event.ayaText, event.translation
                 )
+                viewModelScope.launch { _uiEvent.emit(ReadUiEvent.AyaCopied(R.string.txt_aya_copied)) }
             }
 
             is ReadEvent.DeleteBookmark -> {
                 viewModelScope.launch {
                     bookmarks.remove(event.bookmark.id)
                     bookmarkUseCase.deleteBookmark(event.bookmark)
+                    _uiEvent.emit(ReadUiEvent.BookmarkDeleted(R.string.txt_bookmark_deleted))
                 }
             }
 
@@ -113,6 +127,7 @@ class ReadViewModel @Inject constructor(
                 viewModelScope.launch {
                     event.bookmark.id?.let { bookmarks.add(it) }
                     bookmarkUseCase.insertBookmark(event.bookmark)
+                    _uiEvent.emit(ReadUiEvent.BookmarkAdded(R.string.txt_bookmark_added))
                 }
             }
 
@@ -128,43 +143,78 @@ class ReadViewModel @Inject constructor(
                     playerClient.setPlaylist(playlist, true)
                     playerClient.playMode = PlayMode.SINGLE_ONCE
                     playMode.value = PlayMode.SINGLE_ONCE
-                    _currentAyaPlay.value = event.id
+                    _currentAyaPlayId.value = event.id
+                    _currentAyaPlayName.value = "${event.soraEn} - ${event.ayaNo}"
+                    playType.value = PlayType.SINGLE
                 }
-                _isAudioPlay.value = false
-                playerClient.stop()
-                playerClient.shutdown()
+                if (playerClient.isError){
+                    viewModelScope.launch { _uiEvent.emit(ReadUiEvent.PlayerError(playerClient.errorMessage)) }
+                }
             }
 
             is ReadEvent.ShareAyaContent -> {
                 AppGlobalActions.shareAction(
                     event.context, event.ayaNo, event.soraEn, event.ayaText, event.translation
                 )
+                viewModelScope.launch { _uiEvent.emit(ReadUiEvent.AyaShared(R.string.txt_aya_shared)) }
+            }
+
+            is ReadEvent.PlayAllAudio -> {
+                playerClient.stop()
+                val musicItems = mutableListOf<MusicItem>()
+                event.ayas.forEach { qoran ->
+                    val musicItem = Converters.createMusicItem(
+                        title = "${qoran.soraEn} - ${qoran.ayaNo}",
+                        ayaNo = IntToUrlThreeDigits(qoran.ayaNo ?: return@forEach),
+                        soraNo = IntToUrlThreeDigits(qoran.soraNo ?: return@forEach)
+                    )
+                    musicItems.add(musicItem)
+                }
+                val playlist = Playlist.Builder().appendAll(musicItems).build()
+                playerClient.connect {
+                    playerClient.setPlaylist(playlist, true)
+                    playerClient.playMode = PlayMode.PLAYLIST_LOOP
+                    playMode.value = PlayMode.PLAYLIST_LOOP
+                    playType.value = PlayType.ALL
+                    playerClient.addOnPlayingMusicItemChangeListener { _, position, _ ->
+                        _currentAyaPlayId.value = event.ayas[position].id
+                        _currentAyaPlayName.value =
+                            "${event.ayas[position].soraEn} - ${event.ayas[position].ayaNo}"
+                    }
+                }
+                if (playerClient.isError){
+                    viewModelScope.launch { _uiEvent.emit(ReadUiEvent.PlayerError(playerClient.errorMessage)) }
+                }
             }
         }
     }
 
-    fun onPlayEvent(event: PlayEvent){
-        when(event){
+    fun onPlayEvent(event: PlayEvent) {
+        when (event) {
             PlayEvent.PlayModeChange -> {
-                when(playerClient.playMode){
+                when (playerClient.playMode) {
                     PlayMode.SINGLE_ONCE -> {
                         playerClient.playMode = PlayMode.PLAYLIST_LOOP
                         playMode.value = PlayMode.PLAYLIST_LOOP
                     }
+
                     PlayMode.PLAYLIST_LOOP -> {
                         playerClient.playMode = PlayMode.SINGLE_ONCE
                         playMode.value = PlayMode.SINGLE_ONCE
                     }
+
                     else -> {}
                 }
             }
+
             PlayEvent.PlayPause -> {
-                if (_isAudioPlay.value == playerClient.isPlaying){
-                    playerClient.pause()
-                }else{
-                    playerClient.playPause()
-                }
-                _isAudioPlay.value = !_isAudioPlay.value
+                playerClient.playPause(); _isAudioPlay.value = !_isAudioPlay.value
+            }
+
+            PlayEvent.Next -> playerClient.skipToNext()
+            PlayEvent.Previous -> playerClient.skipToPrevious()
+            PlayEvent.Stop -> {
+                playerClient.stop(); playType.value = PlayType.NONE; playerClient.shutdown()
             }
         }
     }
@@ -213,11 +263,33 @@ sealed class ReadEvent {
         val soraNo: Int,
     ) : ReadEvent()
 
+    data class PlayAllAudio(
+        val ayas: List<Qoran>,
+    ) : ReadEvent()
+
     data class InsertBookmark(val bookmark: Bookmark) : ReadEvent()
     data class DeleteBookmark(val bookmark: Bookmark) : ReadEvent()
+}
+
+sealed class ReadUiEvent {
+    data class BookmarkAdded(val message: Int) : ReadUiEvent()
+    data class BookmarkDeleted(val message: Int) : ReadUiEvent()
+    data class AyaCopied(val message: Int) : ReadUiEvent()
+    data class AyaShared(val message: Int) : ReadUiEvent()
+    data class PlayerError(val message: String) : ReadUiEvent()
 }
 
 sealed class PlayEvent {
     data object PlayPause : PlayEvent()
     data object PlayModeChange : PlayEvent()
+    data object Previous : PlayEvent()
+    data object Next : PlayEvent()
+    data object Stop : PlayEvent()
+
+}
+
+enum class PlayType {
+    NONE,
+    SINGLE,
+    ALL
 }

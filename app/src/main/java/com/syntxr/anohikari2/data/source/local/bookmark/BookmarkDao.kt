@@ -1,4 +1,4 @@
-package com.syntxr.anohikari2.data.source.bookmark
+package com.syntxr.anohikari2.data.source.local.bookmark
 
 import androidx.room.Dao
 import androidx.room.Delete

@@ -5,8 +5,8 @@ import androidx.room.Room
 import com.syntxr.anohikari2.R
 import com.syntxr.anohikari2.data.repository.BookmarkRepositoryImpl
 import com.syntxr.anohikari2.data.repository.QoranRepositoryImpl
-import com.syntxr.anohikari2.data.source.bookmark.BookmarkDatabase
-import com.syntxr.anohikari2.data.source.qoran.QoranDatabase
+import com.syntxr.anohikari2.data.source.local.bookmark.BookmarkDatabase
+import com.syntxr.anohikari2.data.source.local.qoran.QoranDatabase
 import com.syntxr.anohikari2.domain.repository.BookmarkRepository
 import com.syntxr.anohikari2.domain.repository.QoranRepository
 import com.syntxr.anohikari2.domain.usecase.AppUseCase

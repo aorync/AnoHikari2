@@ -1,4 +1,4 @@
-package com.syntxr.anohikari2.data.source.qoran
+package com.syntxr.anohikari2.data.source.local.qoran
 
 import androidx.room.Dao
 import androidx.room.Query

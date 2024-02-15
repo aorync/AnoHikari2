@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="txt_recent_aya">Recently Read</string>
+    <string name="txt_no_recent_aya">You Don\'t Read Yet</string>
+    <string name="txt_sora">Surah</string>
+    <string name="txt_jozz">Juz</string>
+    <string name="txt_bookmark">Bookmark</string>
+    <string name="txt_sort_by">Sort By :</string>
+    <string name="txt_ascend">Ascending</string>
+    <string name="txt_descend">Descending</string>
+    <string name="txt_play_sora">Play All</string>
+    <string name="txt_total_aya">%1$s Ayahs</string>
+    <string name="txt_no_bookmark">No bookmarks here</string>
+    <string name="txt_light_theme">Light Theme</string>
+    <string name="txt_dark_theme">Dark Theme</string>
+    <string name="txt_change_theme">Change app theme, dark or light ?</string>
+    <string name="txt_language">Language</string>
+    <string name="txt_change_language">Select language that often use</string>
+    <string name="txt_qari">Qari</string>
+    <string name="txt_change_qari">Which qari do you want to hear ?</string>
+    <string name="txt_bookmark_added">Bookmark added</string>
+    <string name="txt_bookmark_deleted">Bookmark deleted</string>
+    <string name="txt_aya_copied">Ayah copied</string>
+    <string name="txt_aya_shared">Ayah shared</string>
+    <string name="txt_delete">Delete</string>
+
+</resources>

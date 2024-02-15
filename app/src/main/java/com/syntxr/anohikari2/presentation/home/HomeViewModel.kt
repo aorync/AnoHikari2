@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.util.Calendar
 import javax.inject.Inject
@@ -74,6 +75,12 @@ class HomeViewModel @Inject constructor(
                     bookmarks = bookmarks
                 )
             }.launchIn(viewModelScope)
+    }
+
+    fun deleteBookmark(bookmark: Bookmark){
+        viewModelScope.launch {
+            bookmarkUseCase.deleteBookmark(bookmark)
+        }
     }
 
     fun getSort(isDefault: Boolean) {

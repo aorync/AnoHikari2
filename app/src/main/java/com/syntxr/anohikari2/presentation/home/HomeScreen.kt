@@ -32,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,6 +42,7 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.navigate
 import com.syntxr.anohikari2.AnoHikariSharedViewModel
+import com.syntxr.anohikari2.R
 import com.syntxr.anohikari2.presentation.destinations.ReadScreenDestination
 import com.syntxr.anohikari2.presentation.home.bookmark.BookmarkPage
 import com.syntxr.anohikari2.presentation.home.component.HomeHeader
@@ -59,7 +61,6 @@ fun HomeScreen(
     openDrawer: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
     sharedViewModel: AnoHikariSharedViewModel,
-//    navController: NavHostController,
     navigator: DestinationsNavigator
 ) {
 
@@ -129,6 +130,7 @@ fun HomeScreen(
                 BookmarkPage(
                     lazyState = lazyColumnState,
                     bookmarks = state.bookmarks ?: emptyList(),
+                    deleteBookmark = {bookmark -> viewModel.deleteBookmark(bookmark)  },
                     navigation = {soraNo, jozzNo, indexType, scrollPos ->
                         navigator.navigate(
                             ReadScreenDestination(
@@ -162,7 +164,19 @@ fun HomeScreen(
             HomeHeader(
                 lazyListState = lazyColumnState,
                 time = viewModel.getTime(),
-                openDrawer = openDrawer
+                openDrawer = openDrawer,
+                navigateLastReadToRead = { soraNo, jozzNo, indexType, scrollPos ->
+                    navigator.navigate(
+                        ReadScreenDestination(
+                            ReadScreenNavArgs(
+                                soraNumber = soraNo,
+                                jozzNumber = jozzNo,
+                                indexType = indexType,
+                                scrollPosition = scrollPos
+                            )
+                        )
+                    )
+                }
             )
 
             Card(
@@ -205,7 +219,7 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Sort By: ",
+                        text = stringResource(id = R.string.txt_sort_by),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -219,7 +233,9 @@ fun HomeScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
-                                text = if (isDefault) "Ascending" else "Descending",
+                                text = if (isDefault) stringResource(id = R.string.txt_ascend) else stringResource(
+                                    id = R.string.txt_descend
+                                ),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -243,8 +259,6 @@ fun HomeScreen(
                     tabItems[pagerState.currentPage].content()
                 }
             }
-
-
         }
     }
 }

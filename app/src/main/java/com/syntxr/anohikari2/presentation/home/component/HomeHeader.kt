@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,6 +36,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,6 +44,13 @@ import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.MotionScene
 import com.syntxr.anohikari2.R
+import com.syntxr.anohikari2.data.kotpref.LastReadPreferences
+import com.syntxr.anohikari2.data.kotpref.LastReadPreferences.ayaNumber
+import com.syntxr.anohikari2.data.kotpref.LastReadPreferences.indexType
+import com.syntxr.anohikari2.data.kotpref.LastReadPreferences.jozzNumber
+import com.syntxr.anohikari2.data.kotpref.LastReadPreferences.scrollPosition
+import com.syntxr.anohikari2.data.kotpref.LastReadPreferences.soraName
+import com.syntxr.anohikari2.data.kotpref.LastReadPreferences.soraNumber
 import com.syntxr.anohikari2.presentation.home.Time
 import com.syntxr.anohikari2.ui.theme.montserratFontFamily
 import com.syntxr.anohikari2.ui.theme.ubuntuMonoFontFamily
@@ -52,6 +61,7 @@ import com.syntxr.anohikari2.ui.theme.ubuntuMonoFontFamily
 fun HomeHeader(
     lazyListState: LazyListState,
     time: Time,
+    navigateLastReadToRead: (soraNo: Int?, jozzNo: Int?, indexType: Int, scrollPos: Int?) -> Unit,
     openDrawer: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -140,7 +150,7 @@ fun HomeHeader(
 
         IconButton(
             modifier = Modifier.layoutId("search_btn"),
-            onClick = { /*TODO*/ }
+            onClick = { }
         ) {
             Icon(
                 imageVector = Icons.Rounded.Search,
@@ -151,7 +161,16 @@ fun HomeHeader(
 
 
         Card(
-            modifier = Modifier.layoutId("recent_read_card"),
+            modifier = Modifier
+                .layoutId("recent_read_card")
+                .clickable {
+                    navigateLastReadToRead(
+                        soraNumber,
+                        jozzNumber,
+                        indexType,
+                        scrollPosition
+                    )
+                },
             colors = CardDefaults
                 .cardColors(
                     containerColor = MaterialTheme.colorScheme.surface
@@ -161,22 +180,33 @@ fun HomeHeader(
                 Modifier.padding(10.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                Text(
-                    text = "Recently Read",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = montserratFontFamily,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    letterSpacing = 2.sp,
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Al-Fatihah : 1",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Normal,
-                    fontFamily = ubuntuMonoFontFamily,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
+                if (soraName == null) {
+                    Text(
+                        text = stringResource(id = R.string.txt_no_recent_aya),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = montserratFontFamily,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        letterSpacing = 2.sp,
+                    )
+                } else {
+                    Text(
+                        text = stringResource(id = R.string.txt_recent_aya),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = montserratFontFamily,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        letterSpacing = 2.sp,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "$soraName - $ayaNumber",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = ubuntuMonoFontFamily,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
             }
         }
     }

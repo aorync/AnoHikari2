@@ -17,12 +17,15 @@ object UserPreferences : KotprefModel() {
     }
 
     enum class Language(
+        val tag: String,
         val language: String
     ){
         ID(
+            "id",
             "Indonesia"
         ),
         EN(
+            "en-US",
             "English"
         )
     }

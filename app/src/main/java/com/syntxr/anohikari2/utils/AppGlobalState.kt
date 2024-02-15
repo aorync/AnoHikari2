@@ -9,4 +9,5 @@ import com.syntxr.anohikari2.data.kotpref.UserPreferences
 
 object AppGlobalState {
     var isDarkTheme by mutableStateOf(UserPreferences.isDarkTheme)
+    var currentLanguage by mutableStateOf(UserPreferences.currentLanguage.tag)
 }

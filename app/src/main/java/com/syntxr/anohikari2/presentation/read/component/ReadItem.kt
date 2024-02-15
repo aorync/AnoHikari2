@@ -8,13 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.CopyAll
 import androidx.compose.material.icons.rounded.IosShare
-import androidx.compose.material.icons.rounded.Pause
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -24,7 +22,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,12 +30,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.syntxr.anohikari2.R
+import com.syntxr.anohikari2.presentation.read.PlayType
 import com.syntxr.anohikari2.ui.theme.montserratFontFamily
 import com.syntxr.anohikari2.ui.theme.rubikFontFamily
-import snow.player.PlayMode
 
 @Composable
 fun AyaSoraCard(
@@ -69,28 +68,6 @@ fun AyaSoraCard(
             )
 
             Spacer(modifier = Modifier.height(4.dp))
-
-            TextButton(modifier = modifier.align(Alignment.CenterHorizontally),
-                onClick = { /*TODO*/ }) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Icon(
-                        imageVector = Icons.Rounded.PlayArrow, contentDescription = "icon_play"
-                    )
-
-                    Spacer(modifier = Modifier.width(2.dp))
-
-                    Text(
-                        text = "Play Surah",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-
-                }
-            }
 
             Spacer(modifier = Modifier.heightIn(24.dp))
 
@@ -128,7 +105,7 @@ fun AyaSoraCard(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "$ayas Ayahs",
+                        text = stringResource(id = R.string.txt_total_aya, ayas),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.secondary,
@@ -152,15 +129,12 @@ fun AyaReadItem(
     soraNo: Int,
     ayaNo: Int,
     bookmarks: List<Int>?,
-    isAudioPlay: Boolean,
-    playMode: PlayMode,
     currentPlayAya: Int,
     onInsertBookmarkClick: () -> Unit,
     onDeleteBookmarkClick: () -> Unit,
     onShareClick: () -> Unit,
     onCopyClick: () -> Unit,
     onPlayClick: () -> Unit,
-    onPlayPauseClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -257,21 +231,12 @@ fun AyaReadItem(
                 }
 
                 IconButton(
-                    onClick = {
-                        onPlayClick(); onPlayPauseClick()
-                    }
+                    onClick = onPlayClick
                 ) {
-                    if (currentPlayAya == id) {
-                        Icon(
-                            imageVector = if (isAudioPlay) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
-                            contentDescription = "btn_play"
-                        )
-                    }else{
-                        Icon(
-                            imageVector = Icons.Rounded.PlayArrow,
-                            contentDescription = "btn_play"
-                        )
-                    }
+                    Icon(
+                        imageVector = Icons.Rounded.PlayArrow,
+                        contentDescription = "Play Btn"
+                    )
                 }
 
                 Text(

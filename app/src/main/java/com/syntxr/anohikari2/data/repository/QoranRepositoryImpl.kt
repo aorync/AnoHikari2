@@ -1,6 +1,6 @@
 package com.syntxr.anohikari2.data.repository
 
-import com.syntxr.anohikari2.data.source.qoran.QuranDao
+import com.syntxr.anohikari2.data.source.local.qoran.QuranDao
 import com.syntxr.anohikari2.domain.model.Jozz
 import com.syntxr.anohikari2.domain.model.Qoran
 import com.syntxr.anohikari2.domain.model.Sora

@@ -29,7 +29,7 @@ fun SettingsAlertDialog(
     icon: ImageVector,
     title: String,
     currentSelected: String,
-    actions: List<Action>,
+    content: @Composable () -> Unit,
     confirmButtonText: String = "",
     dismissButtonText: String = "",
     onDismissClick: () -> Unit,
@@ -56,22 +56,7 @@ fun SettingsAlertDialog(
                     Text(text = dismissButtonText)
                 }
         },
-        text = {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                content = {
-                    items(actions) { action ->
-                        ActionItem(
-                            text = action.text,
-                            onClick = action.onClick,
-                            buttonColors = if (currentSelected == action.text) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface
-                        )
-                    }
-                }
-            )
-        }
+        text = content
     )
 }
 
@@ -86,7 +71,7 @@ fun ActionItem(
         shape = CircleShape,
         colors = ButtonDefaults.buttonColors(
             containerColor = buttonColors,
-            contentColor = MaterialTheme.colorScheme.onSurface
+            contentColor = MaterialTheme.colorScheme.primary
         ),
         onClick = onClick
     ) {
