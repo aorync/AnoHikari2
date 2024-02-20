@@ -19,7 +19,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.syntxr.anohikari2.AnoHikariSharedViewModel
 import com.syntxr.anohikari2.data.kotpref.LastReadPreferences
-import com.syntxr.anohikari2.domain.model.Bookmark
+import com.syntxr.anohikari2.data.source.local.bookmark.entity.Bookmark
 import com.syntxr.anohikari2.presentation.read.component.AyaReadItem
 import com.syntxr.anohikari2.presentation.read.component.AyaSoraCard
 import com.syntxr.anohikari2.presentation.read.component.ReadAudioControl

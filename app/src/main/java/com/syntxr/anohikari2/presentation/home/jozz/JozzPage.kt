@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.syntxr.anohikari2.domain.model.Jozz
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Jozz
 import com.syntxr.anohikari2.presentation.home.jozz.component.JozzItem
 import com.syntxr.anohikari2.presentation.read.AYA_BY_JOZZ
 import com.syntxr.anohikari2.ui.theme.AnoHikariTheme

@@ -1,13 +1,12 @@
-package com.syntxr.anohikari2.data.source.local.bookmark
+package com.syntxr.anohikari2.data.source.local.bookmark.database
 
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.syntxr.anohikari2.domain.model.Bookmark
+import com.syntxr.anohikari2.data.source.local.bookmark.entity.Bookmark
 
 @Database(
-    version = 1,
     entities = [Bookmark::class],
+    version = 1,
     exportSchema = true,
 )
 abstract class BookmarkDatabase : RoomDatabase() {

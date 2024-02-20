@@ -1,16 +1,15 @@
-package com.syntxr.anohikari2.data.source.local.qoran
+package com.syntxr.anohikari2.data.source.local.qoran.database
 
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.syntxr.anohikari2.domain.model.Jozz
-import com.syntxr.anohikari2.domain.model.Qoran
-import com.syntxr.anohikari2.domain.model.Sora
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Jozz
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Qoran
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Sora
 
 @Database(
-    version = 1,
     entities = [Qoran::class],
     views = [Sora::class, Jozz::class],
+    version = 1,
     exportSchema = true,
 )
 abstract class QoranDatabase: RoomDatabase() {

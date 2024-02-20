@@ -1,4 +1,4 @@
-package com.syntxr.anohikari2.domain.model
+package com.syntxr.anohikari2.data.source.local.bookmark.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

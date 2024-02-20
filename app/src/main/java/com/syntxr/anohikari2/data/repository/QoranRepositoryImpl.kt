@@ -1,9 +1,9 @@
 package com.syntxr.anohikari2.data.repository
 
-import com.syntxr.anohikari2.data.source.local.qoran.QuranDao
-import com.syntxr.anohikari2.domain.model.Jozz
-import com.syntxr.anohikari2.domain.model.Qoran
-import com.syntxr.anohikari2.domain.model.Sora
+import com.syntxr.anohikari2.data.source.local.qoran.database.QuranDao
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Jozz
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Qoran
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Sora
 import com.syntxr.anohikari2.domain.repository.QoranRepository
 import kotlinx.coroutines.flow.Flow
 

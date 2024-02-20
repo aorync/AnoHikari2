@@ -1,4 +1,4 @@
-package com.syntxr.anohikari2.data.source.remote.model
+package com.syntxr.anohikari2.data.source.remote.response
 
 
 import com.google.gson.annotations.SerializedName

@@ -8,8 +8,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.syntxr.anohikari2.R
-import com.syntxr.anohikari2.domain.model.Bookmark
-import com.syntxr.anohikari2.domain.model.Qoran
+import com.syntxr.anohikari2.data.source.local.bookmark.entity.Bookmark
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Qoran
 import com.syntxr.anohikari2.domain.usecase.AppUseCase
 import com.syntxr.anohikari2.presentation.navArgs
 import com.syntxr.anohikari2.utils.AppGlobalActions

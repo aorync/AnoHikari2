@@ -33,7 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.syntxr.anohikari2.R
-import com.syntxr.anohikari2.domain.model.Bookmark
+import com.syntxr.anohikari2.data.source.local.bookmark.entity.Bookmark
 import com.syntxr.anohikari2.presentation.home.bookmark.component.BookmarkItem
 import com.syntxr.anohikari2.presentation.home.bookmark.component.DeleteItemAction
 import com.syntxr.anohikari2.presentation.read.AYA_BY_SORA

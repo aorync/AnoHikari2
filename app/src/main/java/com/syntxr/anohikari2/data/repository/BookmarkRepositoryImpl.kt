@@ -1,7 +1,7 @@
 package com.syntxr.anohikari2.data.repository
 
-import com.syntxr.anohikari2.data.source.local.bookmark.BookmarkDao
-import com.syntxr.anohikari2.domain.model.Bookmark
+import com.syntxr.anohikari2.data.source.local.bookmark.database.BookmarkDao
+import com.syntxr.anohikari2.data.source.local.bookmark.entity.Bookmark
 import com.syntxr.anohikari2.domain.repository.BookmarkRepository
 import kotlinx.coroutines.flow.Flow
 

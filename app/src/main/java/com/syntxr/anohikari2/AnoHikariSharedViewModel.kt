@@ -1,11 +1,8 @@
 package com.syntxr.anohikari2
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.syntxr.anohikari2.domain.model.Sora
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Sora
 
 class AnoHikariSharedViewModel : ViewModel() {
     private val _totalAya = MutableLiveData<List<Int>>()

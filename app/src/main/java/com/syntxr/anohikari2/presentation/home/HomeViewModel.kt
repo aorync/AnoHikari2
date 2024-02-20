@@ -6,9 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.syntxr.anohikari2.domain.model.Bookmark
-import com.syntxr.anohikari2.domain.model.Jozz
-import com.syntxr.anohikari2.domain.model.Sora
+import com.syntxr.anohikari2.data.source.local.bookmark.entity.Bookmark
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Jozz
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Sora
 import com.syntxr.anohikari2.domain.usecase.AppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job

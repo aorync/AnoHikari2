@@ -1,6 +1,6 @@
 package com.syntxr.anohikari2.domain.repository
 
-import com.syntxr.anohikari2.domain.model.Bookmark
+import com.syntxr.anohikari2.data.source.local.bookmark.entity.Bookmark
 import kotlinx.coroutines.flow.Flow
 
 interface BookmarkRepository {

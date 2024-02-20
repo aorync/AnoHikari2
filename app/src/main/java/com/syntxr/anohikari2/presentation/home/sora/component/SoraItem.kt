@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.syntxr.anohikari2.R
-import com.syntxr.anohikari2.domain.model.Sora
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Sora
 import com.syntxr.anohikari2.ui.theme.AnoHikariTheme
 import com.syntxr.anohikari2.ui.theme.montserratFontFamily
 import com.syntxr.anohikari2.ui.theme.novaMonoFontFamily

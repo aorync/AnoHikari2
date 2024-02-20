@@ -1,11 +1,11 @@
-package com.syntxr.anohikari2.data.source.local.bookmark
+package com.syntxr.anohikari2.data.source.local.bookmark.database
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.syntxr.anohikari2.domain.model.Bookmark
+import com.syntxr.anohikari2.data.source.local.bookmark.entity.Bookmark
 import kotlinx.coroutines.flow.Flow
 
 @Dao

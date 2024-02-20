@@ -1,22 +1,27 @@
 package com.syntxr.anohikari2.di
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.google.android.gms.location.LocationServices
 import com.syntxr.anohikari2.R
 import com.syntxr.anohikari2.data.repository.BookmarkRepositoryImpl
 import com.syntxr.anohikari2.data.repository.QoranRepositoryImpl
-import com.syntxr.anohikari2.data.source.local.bookmark.BookmarkDatabase
-import com.syntxr.anohikari2.data.source.local.qoran.QoranDatabase
+import com.syntxr.anohikari2.data.source.local.bookmark.database.BookmarkDatabase
+import com.syntxr.anohikari2.data.source.local.qoran.database.QoranDatabase
 import com.syntxr.anohikari2.domain.repository.BookmarkRepository
 import com.syntxr.anohikari2.domain.repository.QoranRepository
 import com.syntxr.anohikari2.domain.usecase.AppUseCase
 import com.syntxr.anohikari2.domain.usecase.UseCaseInteractor
+import com.syntxr.anohikari2.service.location.LocationClient
+import com.syntxr.anohikari2.service.location.LocationClientImpl
 import com.syntxr.anohikari2.service.player.MyPlayerService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
 import snow.player.PlayerClient
 import javax.inject.Singleton
 
@@ -73,5 +78,18 @@ object AppModule {
     @Singleton
     fun providePlayerClient(@ApplicationContext context: Context) : PlayerClient {
         return PlayerClient.newInstance(context, MyPlayerService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationClient(
+        app: Application,
+        coroutineScope: CoroutineScope
+    ) : LocationClient {
+        return LocationClientImpl(
+            app,
+            coroutineScope,
+            LocationServices.getFusedLocationProviderClient(app.applicationContext)
+        )
     }
 }

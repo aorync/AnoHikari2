@@ -3,7 +3,7 @@ package com.syntxr.anohikari2.utils
 import androidx.compose.foundation.lazy.LazyListState
 import com.syntxr.anohikari2.BuildConfig
 import com.syntxr.anohikari2.data.kotpref.UserPreferences
-import com.syntxr.anohikari2.domain.model.Jozz
+import com.syntxr.anohikari2.data.source.local.qoran.entity.Jozz
 import snow.player.audio.MusicItem
 import java.text.SimpleDateFormat
 import java.util.Date
