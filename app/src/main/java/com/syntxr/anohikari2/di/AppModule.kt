@@ -4,11 +4,16 @@ import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.google.android.gms.location.LocationServices
+import com.syntxr.anohikari2.BuildConfig
 import com.syntxr.anohikari2.R
+import com.syntxr.anohikari2.data.repository.AdzanRepositoryImpl
 import com.syntxr.anohikari2.data.repository.BookmarkRepositoryImpl
 import com.syntxr.anohikari2.data.repository.QoranRepositoryImpl
+import com.syntxr.anohikari2.data.source.local.adzan.database.AdzanDatabase
 import com.syntxr.anohikari2.data.source.local.bookmark.database.BookmarkDatabase
 import com.syntxr.anohikari2.data.source.local.qoran.database.QoranDatabase
+import com.syntxr.anohikari2.data.source.remote.service.AdzanApi
+import com.syntxr.anohikari2.domain.repository.AdzanRepository
 import com.syntxr.anohikari2.domain.repository.BookmarkRepository
 import com.syntxr.anohikari2.domain.repository.QoranRepository
 import com.syntxr.anohikari2.domain.usecase.AppUseCase
@@ -22,6 +27,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import snow.player.PlayerClient
 import javax.inject.Singleton
 
@@ -32,13 +42,13 @@ object AppModule {
     @Provides
     @Singleton
     fun provideQoranDatabase(
-        @ApplicationContext context: Context
-    ) : QoranDatabase {
+        @ApplicationContext context: Context,
+    ): QoranDatabase {
         return Room.databaseBuilder(
             context,
             QoranDatabase::class.java,
             QoranDatabase.DB_NAME
-        ).createFromInputStream{
+        ).createFromInputStream {
             context.resources.openRawResource(R.raw.qoran)
         }
             .build()
@@ -47,13 +57,44 @@ object AppModule {
     @Provides
     @Singleton
     fun provideBookmarkDatabase(
-        @ApplicationContext context: Context
-    ) : BookmarkDatabase {
+        @ApplicationContext context: Context,
+    ): BookmarkDatabase {
         return Room.databaseBuilder(
             context,
             BookmarkDatabase::class.java,
             BookmarkDatabase.DB_NAME
         ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAdzanDatabase(
+        @ApplicationContext context: Context,
+    ): AdzanDatabase {
+        return Room.databaseBuilder(
+            context,
+            AdzanDatabase::class.java,
+            AdzanDatabase.DB_NAME
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAdzanApi(): AdzanApi {
+        val loggingInterceptor =
+            if (BuildConfig.DEBUG) HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+            else HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.NONE)
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.ADZAN_URL)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(AdzanApi::class.java)
     }
 
     @Provides
@@ -70,22 +111,41 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUseCase(qoran: QoranRepository, bookmark: BookmarkRepository): AppUseCase{
-        return UseCaseInteractor(qoran, bookmark)
+    fun provideAdzanRepository(
+        api: AdzanApi,
+        db: AdzanDatabase,
+    ): AdzanRepository {
+        return AdzanRepositoryImpl(api, db.dao)
     }
 
     @Provides
     @Singleton
-    fun providePlayerClient(@ApplicationContext context: Context) : PlayerClient {
+    fun provideUseCase(
+        qoran: QoranRepository,
+        bookmark: BookmarkRepository,
+        adzan: AdzanRepository,
+    ): AppUseCase {
+        return UseCaseInteractor(qoran, bookmark, adzan)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlayerClient(@ApplicationContext context: Context): PlayerClient {
         return PlayerClient.newInstance(context, MyPlayerService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideExternalCoroutineScope(): CoroutineScope {
+        return CoroutineScope(Dispatchers.IO)
     }
 
     @Provides
     @Singleton
     fun provideLocationClient(
         app: Application,
-        coroutineScope: CoroutineScope
-    ) : LocationClient {
+        coroutineScope: CoroutineScope,
+    ): LocationClient {
         return LocationClientImpl(
             app,
             coroutineScope,

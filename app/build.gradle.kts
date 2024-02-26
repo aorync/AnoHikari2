@@ -37,6 +37,7 @@ android {
         properties.load(keyStoreFile.inputStream())
 
         buildConfigField("String", "AUDIO_URL", "\"${properties.getProperty("AUDIO_URL")}\"")
+        buildConfigField("String", "ADZAN_URL", "\"${properties.getProperty("ADZAN_URL")}\"")
     }
 
     buildTypes {

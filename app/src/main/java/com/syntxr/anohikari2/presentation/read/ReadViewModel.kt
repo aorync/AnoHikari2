@@ -186,6 +186,8 @@ class ReadViewModel @Inject constructor(
                     viewModelScope.launch { _uiEvent.emit(ReadUiEvent.PlayerError(playerClient.errorMessage)) }
                 }
             }
+
+            else -> {}
         }
     }
 
@@ -216,6 +218,8 @@ class ReadViewModel @Inject constructor(
             PlayEvent.Stop -> {
                 playerClient.stop(); playType.value = PlayType.NONE; playerClient.shutdown()
             }
+
+            else -> {}
         }
     }
 

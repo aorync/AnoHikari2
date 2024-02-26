@@ -1,5 +1,6 @@
 package com.syntxr.anohikari2.presentation.read.component
 
+import android.text.Spannable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

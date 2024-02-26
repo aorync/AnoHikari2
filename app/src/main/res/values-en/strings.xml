@@ -16,6 +16,8 @@
     <string name="txt_change_theme">Change app theme, dark or light ?</string>
     <string name="txt_language">Language</string>
     <string name="txt_change_language">Select language that often use</string>
+    <string name="txt_tajweed">Tajweed Colour</string>
+    <string name="txt_change_tajweed">Do you want to use coloured tajweed ?</string>
     <string name="txt_qari">Qari</string>
     <string name="txt_change_qari">Which qari do you want to hear ?</string>
     <string name="txt_bookmark_added">Bookmark added</string>
@@ -23,5 +25,13 @@
     <string name="txt_aya_copied">Ayah copied</string>
     <string name="txt_aya_shared">Ayah shared</string>
     <string name="txt_delete">Delete</string>
+    <string name="txt_settings_title">Settings</string>
+    <string name="txt_adzan_title">Shalat Time</string>
+    <string name="txt_current_location">Your Location : %1$s</string>
+    <string name="txt_err_no_gps">Activate your location 0.0 !</string>
+    <string name="txt_err_no_permission">Can you give permission for location ?</string>
+    <string name="txt_err_else">Oops, something wrong</string>
+    <string name="txt_retry_err">Try Again ?</string>
+    <string name="txt_msg_location_to_usr">Turn on your location first</string>
 
 </resources>

@@ -1,8 +1,7 @@
-package com.syntxr.anohikari2
+package com.syntxr.anohikari2.presentation
 
 import android.app.LocaleManager
 import android.os.Build
-import android.os.LocaleList
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material3.DrawerValue
@@ -11,14 +10,15 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
-import com.syntxr.anohikari2.presentation.NavGraphs
+import com.syntxr.anohikari2.data.kotpref.UserPreferences
+import com.syntxr.anohikari2.presentation.adzan.AdzanScreen
 import com.syntxr.anohikari2.presentation.component.AppDrawer
+import com.syntxr.anohikari2.presentation.destinations.AdzanScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.HomeScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.ReadScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.SettingsScreenDestination
@@ -36,13 +36,16 @@ fun AnoHikariApp(
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val sharedViewModel : AnoHikariSharedViewModel = viewModel(LocalContext.current as ComponentActivity)
-    val localeLanguage = AppGlobalState.currentLanguage
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
         LocalContext.current.getSystemService(LocaleManager::class.java)
-            .applicationLocales
+            .applicationLocales.also {
+                AppGlobalState.currentLanguage = it.toLanguageTags()
+            }
     }else{
-        AppCompatDelegate.getApplicationLocales()
+        AppCompatDelegate.getApplicationLocales().also {
+            AppGlobalState.currentLanguage = it.toLanguageTags()
+        }
     }
 
     ModalNavigationDrawer(
@@ -76,6 +79,9 @@ fun AnoHikariApp(
                 SettingsScreen(
                     navigator = destinationsNavigator
                 )
+            }
+            composable(AdzanScreenDestination){
+                AdzanScreen(navigator = destinationsNavigator)
             }
         }
     }

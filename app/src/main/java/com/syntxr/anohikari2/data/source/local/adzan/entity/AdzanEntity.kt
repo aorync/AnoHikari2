@@ -26,7 +26,7 @@ data class AdzanEntity(
     @PrimaryKey(true)
     val id: Int? = null,
 ) {
-    fun AdzanEntity.toAdzan() : Adzan {
+    fun toAdzan() : Adzan {
         return Adzan(
             city = city,
             lat = lat,

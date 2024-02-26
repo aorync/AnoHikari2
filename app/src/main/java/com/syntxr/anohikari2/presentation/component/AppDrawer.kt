@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Timelapse
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
@@ -29,6 +30,7 @@ import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import com.syntxr.anohikari2.R
 import com.syntxr.anohikari2.presentation.NavGraphs
 import com.syntxr.anohikari2.presentation.appCurrentDestinationAsState
+import com.syntxr.anohikari2.presentation.destinations.AdzanScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.HomeScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.SettingsScreenDestination
 import com.syntxr.anohikari2.presentation.startAppDestination
@@ -46,7 +48,8 @@ fun AppDrawer(
 
     val drawerDestination = listOf(
         AppDrawerDestination(HomeScreenDestination, Icons.Rounded.Home, "Home"),
-        AppDrawerDestination(SettingsScreenDestination, Icons.Rounded.Settings, "Settings")
+        AppDrawerDestination(SettingsScreenDestination, Icons.Rounded.Settings, "Settings"),
+        AppDrawerDestination(AdzanScreenDestination, Icons.Rounded.Timelapse, "Shalat Time")
     )
 
     ModalDrawerSheet(

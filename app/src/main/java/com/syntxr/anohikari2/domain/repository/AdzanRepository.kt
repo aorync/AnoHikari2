@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface AdzanRepository {
 
     fun getAdzan(
-        fetchFromRemote: Boolean,
         latitude: String,
         longitude: String
     ): Flow<Resource<List<Adzan>>>

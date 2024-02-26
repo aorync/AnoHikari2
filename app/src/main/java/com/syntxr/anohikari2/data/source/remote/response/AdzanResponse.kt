@@ -2,6 +2,7 @@ package com.syntxr.anohikari2.data.source.remote.response
 
 
 import com.google.gson.annotations.SerializedName
+import com.syntxr.anohikari2.data.source.local.adzan.entity.AdzanEntity
 import com.syntxr.anohikari2.domain.model.Adzan
 
 data class AdzanResponse(
@@ -20,8 +21,8 @@ data class AdzanResponse(
     @SerializedName("times")
     val times: List<Time>
 ) {
-    fun  AdzanResponse.toAdzan() : Adzan {
-        return Adzan(
+    fun  toAdzanEntity() : AdzanEntity {
+        return AdzanEntity(
             city = city,
             lat = lat,
             latitude = latitude,

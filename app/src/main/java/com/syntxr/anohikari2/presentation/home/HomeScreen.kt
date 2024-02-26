@@ -36,12 +36,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.navigate
-import com.syntxr.anohikari2.AnoHikariSharedViewModel
+import com.syntxr.anohikari2.presentation.AnoHikariSharedViewModel
 import com.syntxr.anohikari2.R
 import com.syntxr.anohikari2.presentation.destinations.ReadScreenDestination
 import com.syntxr.anohikari2.presentation.home.bookmark.BookmarkPage
@@ -130,7 +128,7 @@ fun HomeScreen(
                 BookmarkPage(
                     lazyState = lazyColumnState,
                     bookmarks = state.bookmarks ?: emptyList(),
-                    deleteBookmark = {bookmark -> viewModel.deleteBookmark(bookmark)  },
+                    deleteBookmark = { bookmark -> viewModel.deleteBookmark(bookmark)  },
                     navigation = {soraNo, jozzNo, indexType, scrollPos ->
                         navigator.navigate(
                             ReadScreenDestination(

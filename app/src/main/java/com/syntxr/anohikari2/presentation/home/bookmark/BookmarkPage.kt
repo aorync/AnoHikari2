@@ -51,7 +51,6 @@ fun BookmarkPage(
 ) {
     val density = LocalDensity.current
     val contentSize = 80.dp
-    val endSizePx = with(density) { (contentSize * 2).toPx() }
     val startSizePx = with(density) { contentSize.toPx() }
 
     val dragstate = AnchoredDraggableState(initialValue = DragAnchors.Center,
@@ -96,6 +95,9 @@ fun BookmarkPage(
                                     modifier = Modifier
                                         .width(contentSize)
                                         .fillMaxHeight()
+                                        .clickable {
+                                            deleteBookmark(bookmark)
+                                        }
                                 )
                             }
 

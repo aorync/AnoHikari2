@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,13 +18,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.syntxr.anohikari2.AnoHikariSharedViewModel
+import com.syntxr.anohikari2.presentation.AnoHikariSharedViewModel
 import com.syntxr.anohikari2.data.kotpref.LastReadPreferences
+import com.syntxr.anohikari2.data.kotpref.UserPreferences
 import com.syntxr.anohikari2.data.source.local.bookmark.entity.Bookmark
 import com.syntxr.anohikari2.presentation.read.component.AyaReadItem
 import com.syntxr.anohikari2.presentation.read.component.AyaSoraCard
 import com.syntxr.anohikari2.presentation.read.component.ReadAudioControl
 import com.syntxr.anohikari2.presentation.read.component.ReadPlayTopBar
+import com.syntxr.anohikari2.utils.AppGlobalState
+import com.syntxr.anohikari2.utils.Converters
+import com.syntxr.anohikari2.utils.Converters.replaceTranslation
+import com.syntxr.anohikari2.utils.toAnnotatedString
 import kotlinx.coroutines.delay
 
 data class ReadScreenNavArgs(
@@ -66,14 +72,32 @@ fun ReadScreen(
     }
 
     viewModel.uiEvent.collectAsState().let { event ->
-        when(val uiEvent = event.value){
-            is ReadUiEvent.AyaCopied -> Toast.makeText(context, uiEvent.message, Toast.LENGTH_SHORT).show()
+        when (val uiEvent = event.value) {
+            is ReadUiEvent.AyaCopied -> Toast.makeText(context, uiEvent.message, Toast.LENGTH_SHORT)
+                .show()
 
-            is ReadUiEvent.AyaShared -> Toast.makeText(context, uiEvent.message, Toast.LENGTH_SHORT).show()
-            is ReadUiEvent.BookmarkAdded -> Toast.makeText(context, uiEvent.message, Toast.LENGTH_SHORT).show()
-            is ReadUiEvent.BookmarkDeleted -> Toast.makeText(context, uiEvent.message, Toast.LENGTH_SHORT).show()
-            is ReadUiEvent.PlayerError -> Toast.makeText(context, uiEvent.message, Toast.LENGTH_SHORT).show()
-            null -> {}
+            is ReadUiEvent.AyaShared -> Toast.makeText(context, uiEvent.message, Toast.LENGTH_SHORT)
+                .show()
+
+            is ReadUiEvent.BookmarkAdded -> Toast.makeText(
+                context,
+                uiEvent.message,
+                Toast.LENGTH_SHORT
+            ).show()
+
+            is ReadUiEvent.BookmarkDeleted -> Toast.makeText(
+                context,
+                uiEvent.message,
+                Toast.LENGTH_SHORT
+            ).show()
+
+            is ReadUiEvent.PlayerError -> Toast.makeText(
+                context,
+                uiEvent.message,
+                Toast.LENGTH_SHORT
+            ).show()
+
+            else -> {}
         }
     }
 
@@ -143,8 +167,17 @@ fun ReadScreen(
                             AyaReadItem(
                                 id = qoran.id,
                                 bookmarks = viewModel.isBookmark(),
-                                ayaText = qoran.ayaText ?: "",
-                                translation = qoran.translationId ?: "",
+                                ayaText = if (AppGlobalState.isTajweed)
+                                Converters.applyTajweed(
+                                    context,
+                                    qoran.ayaText ?: ""
+                                ).toAnnotatedString(MaterialTheme.colorScheme.onSurface).toString()
+                                else
+                                    qoran.ayaText ?: "",
+                                translation = if (AppGlobalState.currentLanguage == UserPreferences.Language.ID.tag)
+                                qoran.translationId ?: ""
+                                else
+                                    replaceTranslation( qoran.translationEn ?: ""),
                                 soraNo = qoran.soraNo ?: 0,
                                 ayaNo = qoran.ayaNo ?: 0,
                                 onInsertBookmarkClick = {
@@ -191,13 +224,13 @@ fun ReadScreen(
                                 },
                                 currentPlayAya = currentAyaPlayId
                             )
-                            with(LastReadPreferences){
+                            with(LastReadPreferences) {
                                 soraName = qoran.soraEn ?: ""
                                 soraNumber = qoran.soraNo ?: 1
                                 jozzNumber = qoran.jozz ?: 1
                                 ayaNumber = qoran.ayaNo ?: 1
                                 indexType = viewModel.indexType
-                                scrollPosition= index
+                                scrollPosition = index
                             }
                         }
                     }

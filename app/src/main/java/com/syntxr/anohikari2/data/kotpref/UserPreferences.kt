@@ -8,12 +8,14 @@ object UserPreferences : KotprefModel() {
     var isDarkTheme by booleanPref(false)
     var currentLanguage by enumOrdinalPref(Language.ID)
     var currentQori by enumOrdinalPref(Qori.ABD_SUDAIS)
+    var isTajweed by booleanPref(true)
 
     override fun clear() {
         super.clear()
         isDarkTheme = false
         currentLanguage = Language.ID
         currentQori = Qori.ABD_SUDAIS
+        isTajweed = true
     }
 
     enum class Language(

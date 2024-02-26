@@ -14,9 +14,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBackIosNew
+import androidx.compose.material.icons.rounded.ColorLens
 import androidx.compose.material.icons.rounded.DarkMode
 import androidx.compose.material.icons.rounded.LightMode
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -45,7 +45,6 @@ import com.syntxr.anohikari2.data.kotpref.UserPreferences.Language
 import com.syntxr.anohikari2.data.kotpref.UserPreferences.Qori
 import com.syntxr.anohikari2.data.kotpref.UserPreferences.currentLanguage
 import com.syntxr.anohikari2.data.kotpref.UserPreferences.currentQori
-import com.syntxr.anohikari2.presentation.settings.component.Action
 import com.syntxr.anohikari2.presentation.settings.component.ActionItem
 import com.syntxr.anohikari2.presentation.settings.component.ClickableCardSettings
 import com.syntxr.anohikari2.presentation.settings.component.SettingsAlertDialog
@@ -80,7 +79,7 @@ fun SettingsScreen(
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
             Text(
-                text = "Settings", fontWeight = FontWeight.Medium
+                text = stringResource(id = R.string.txt_settings_title), fontWeight = FontWeight.Medium
             )
         }, navigationIcon = {
             IconButton(
@@ -109,6 +108,17 @@ fun SettingsScreen(
                     AppGlobalState.isDarkTheme = isChecked
                     UserPreferences.isDarkTheme = isChecked
                 })
+
+            SwitchableCardSettings(
+                label = stringResource(id = R.string.txt_tajweed),
+                description = stringResource(id = R.string.txt_change_tajweed),
+                icon = Icons.Rounded.ColorLens,
+                isSwitched = AppGlobalState.isTajweed,
+                onSwitch = { isChecked ->
+                    AppGlobalState.isTajweed = isChecked
+                    UserPreferences.isTajweed = isChecked
+                }
+            )
 
             ClickableCardSettings(label = stringResource(id = R.string.txt_language),
                 description = stringResource(id = R.string.txt_change_language),

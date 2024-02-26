@@ -1,4 +1,4 @@
-package com.syntxr.anohikari2
+package com.syntxr.anohikari2.presentation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
