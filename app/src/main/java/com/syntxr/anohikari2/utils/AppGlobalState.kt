@@ -11,4 +11,5 @@ object AppGlobalState {
     var isDarkTheme by mutableStateOf(UserPreferences.isDarkTheme)
     var isTajweed by mutableStateOf(UserPreferences.isTajweed)
     var currentLanguage by mutableStateOf(UserPreferences.currentLanguage.tag)
+    var drawerGesture by mutableStateOf(UserPreferences.drawerGesture)
 }

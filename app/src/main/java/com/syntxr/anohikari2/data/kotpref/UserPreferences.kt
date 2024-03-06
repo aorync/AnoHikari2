@@ -5,17 +5,19 @@ import com.chibatching.kotpref.enumpref.enumOrdinalPref
 
 object UserPreferences : KotprefModel() {
 
-    var isDarkTheme by booleanPref(false)
+    var isDarkTheme by booleanPref(true)
     var currentLanguage by enumOrdinalPref(Language.ID)
     var currentQori by enumOrdinalPref(Qori.ABD_SUDAIS)
     var isTajweed by booleanPref(true)
+    var drawerGesture by booleanPref(false)
 
     override fun clear() {
         super.clear()
-        isDarkTheme = false
+        isDarkTheme = true
         currentLanguage = Language.ID
         currentQori = Qori.ABD_SUDAIS
         isTajweed = true
+        drawerGesture = false
     }
 
     enum class Language(

@@ -1,6 +1,5 @@
 package com.syntxr.anohikari2.presentation.read.component
 
-import android.text.Spannable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,14 +30,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.syntxr.anohikari2.R
-import com.syntxr.anohikari2.presentation.read.PlayType
 import com.syntxr.anohikari2.ui.theme.montserratFontFamily
 import com.syntxr.anohikari2.ui.theme.rubikFontFamily
+import com.syntxr.anohikari2.utils.AppGlobalState
+import com.syntxr.anohikari2.utils.Converters
+import com.syntxr.anohikari2.utils.toAnnotatedString
 
 @Composable
 fun AyaSoraCard(
@@ -137,6 +139,7 @@ fun AyaReadItem(
     onCopyClick: () -> Unit,
     onPlayClick: () -> Unit,
     modifier: Modifier = Modifier,
+    isTajweed: Boolean,
 ) {
 
     var bookmarkState by remember {
@@ -159,15 +162,27 @@ fun AyaReadItem(
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            Text(
-                text = ayaText,
-                modifier = modifier.align(Alignment.End),
-                textAlign = TextAlign.End,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Normal,
-                fontFamily = rubikFontFamily,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            if (AppGlobalState.isTajweed){
+                val annotatedAya = Converters.applyTajweed(LocalContext.current, ayaText).toAnnotatedString(MaterialTheme.colorScheme.onSurface)
+                Text(
+                    text = annotatedAya,
+                    modifier = modifier.align(Alignment.End),
+                    textAlign = TextAlign.End,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = rubikFontFamily,
+                )
+            }else {
+                Text(
+                    text = ayaText,
+                    modifier = modifier.align(Alignment.End),
+                    textAlign = TextAlign.End,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = rubikFontFamily,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 

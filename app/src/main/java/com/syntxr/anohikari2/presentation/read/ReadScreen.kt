@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,9 +26,7 @@ import com.syntxr.anohikari2.presentation.read.component.AyaSoraCard
 import com.syntxr.anohikari2.presentation.read.component.ReadAudioControl
 import com.syntxr.anohikari2.presentation.read.component.ReadPlayTopBar
 import com.syntxr.anohikari2.utils.AppGlobalState
-import com.syntxr.anohikari2.utils.Converters
 import com.syntxr.anohikari2.utils.Converters.replaceTranslation
-import com.syntxr.anohikari2.utils.toAnnotatedString
 import kotlinx.coroutines.delay
 
 data class ReadScreenNavArgs(
@@ -48,6 +45,7 @@ fun ReadScreen(
     sharedViewModel: AnoHikariSharedViewModel,
     navigator: DestinationsNavigator,
 ) {
+    AppGlobalState.drawerGesture = false
     val state = viewModel.state.value
     val lazyColumnState = rememberLazyListState()
     val totalAyas = remember {
@@ -166,14 +164,9 @@ fun ReadScreen(
 
                             AyaReadItem(
                                 id = qoran.id,
+                                isTajweed = AppGlobalState.isTajweed,
                                 bookmarks = viewModel.isBookmark(),
-                                ayaText = if (AppGlobalState.isTajweed)
-                                Converters.applyTajweed(
-                                    context,
-                                    qoran.ayaText ?: ""
-                                ).toAnnotatedString(MaterialTheme.colorScheme.onSurface).toString()
-                                else
-                                    qoran.ayaText ?: "",
+                                ayaText = qoran.ayaText ?: "",
                                 translation = if (AppGlobalState.currentLanguage == UserPreferences.Language.ID.tag)
                                 qoran.translationId ?: ""
                                 else

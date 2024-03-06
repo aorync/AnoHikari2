@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Explore
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Timelapse
@@ -32,6 +33,7 @@ import com.syntxr.anohikari2.presentation.NavGraphs
 import com.syntxr.anohikari2.presentation.appCurrentDestinationAsState
 import com.syntxr.anohikari2.presentation.destinations.AdzanScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.HomeScreenDestination
+import com.syntxr.anohikari2.presentation.destinations.QiblaScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.SettingsScreenDestination
 import com.syntxr.anohikari2.presentation.startAppDestination
 import com.syntxr.anohikari2.ui.theme.novaMonoFontFamily
@@ -49,7 +51,8 @@ fun AppDrawer(
     val drawerDestination = listOf(
         AppDrawerDestination(HomeScreenDestination, Icons.Rounded.Home, "Home"),
         AppDrawerDestination(SettingsScreenDestination, Icons.Rounded.Settings, "Settings"),
-        AppDrawerDestination(AdzanScreenDestination, Icons.Rounded.Timelapse, "Shalat Time")
+        AppDrawerDestination(AdzanScreenDestination, Icons.Rounded.Timelapse, "Shalat Time"),
+        AppDrawerDestination(QiblaScreenDestination, Icons.Rounded.Explore, "Qibla")
     )
 
     ModalDrawerSheet(

@@ -25,4 +25,16 @@ class QoranRepositoryImpl(
     override fun getJozzAya(jozzNo: Int): Flow<List<Qoran>> {
         return dao.getJozzAya(jozzNo)
     }
+
+    override fun searchAya(search: String): Flow<List<Qoran>> {
+        return dao.searchAya(search)
+    }
+
+    override fun searchAyaId(search: String): Flow<List<Qoran>> {
+        return dao.searchAyaId(search)
+    }
+
+    override fun searchAyaEn(search: String): Flow<List<Qoran>> {
+        return dao.searchAyaEn(search)
+    }
 }

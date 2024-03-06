@@ -28,9 +28,9 @@ class LocationClientImpl(
     override fun requestLocationUpdate(): Flow<LocationClientTracker<Location?>> =
         callbackFlow<LocationClientTracker<Location?>> {
 
-            val locationManager = application.getSystemService(
-                Context.LOCATION_SERVICE
-            ) as LocationManager
+            val locationRequest = LocationRequest.Builder(1000)
+                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                .build()
 
             val locationPermission = ContextCompat.checkSelfPermission(
                 application,
@@ -39,6 +39,11 @@ class LocationClientImpl(
                 application,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
+
+            val locationManager = application.getSystemService(
+                Context.LOCATION_SERVICE
+            ) as LocationManager
+
 
             val gpsPermission = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) ||
                     locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -50,10 +55,6 @@ class LocationClientImpl(
             if(!gpsPermission){
                 trySend(LocationClientTracker.NoGps())
             }
-
-            val locationRequest = LocationRequest.Builder(1000)
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-                .build()
 
             val locationCallback = object : LocationCallback() {
                 override fun onLocationResult(result: LocationResult) {

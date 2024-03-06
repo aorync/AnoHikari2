@@ -57,6 +57,7 @@ import com.syntxr.anohikari2.utils.AppGlobalState
 fun SettingsScreen(
     navigator: DestinationsNavigator,
 ) {
+    AppGlobalState.drawerGesture = false
     val context = LocalContext.current
     var isLanguageDialogShow by remember {
         mutableStateOf(false)

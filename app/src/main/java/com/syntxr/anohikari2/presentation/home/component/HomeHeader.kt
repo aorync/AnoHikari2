@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -44,7 +43,6 @@ import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.constraintlayout.compose.MotionScene
 import com.syntxr.anohikari2.R
-import com.syntxr.anohikari2.data.kotpref.LastReadPreferences
 import com.syntxr.anohikari2.data.kotpref.LastReadPreferences.ayaNumber
 import com.syntxr.anohikari2.data.kotpref.LastReadPreferences.indexType
 import com.syntxr.anohikari2.data.kotpref.LastReadPreferences.jozzNumber
@@ -63,6 +61,7 @@ fun HomeHeader(
     time: Time,
     navigateLastReadToRead: (soraNo: Int?, jozzNo: Int?, indexType: Int, scrollPos: Int?) -> Unit,
     openDrawer: () -> Unit,
+    navigateToSearch: () -> Unit,
 ) {
     val context = LocalContext.current
     val motionScene = remember {
@@ -150,7 +149,8 @@ fun HomeHeader(
 
         IconButton(
             modifier = Modifier.layoutId("search_btn"),
-            onClick = { }
+            onClick = navigateToSearch
+
         ) {
             Icon(
                 imageVector = Icons.Rounded.Search,

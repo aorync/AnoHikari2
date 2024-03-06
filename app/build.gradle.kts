@@ -38,6 +38,9 @@ android {
 
         buildConfigField("String", "AUDIO_URL", "\"${properties.getProperty("AUDIO_URL")}\"")
         buildConfigField("String", "ADZAN_URL", "\"${properties.getProperty("ADZAN_URL")}\"")
+        buildConfigField("String", "QIBLA_URL", "\"${properties.getProperty("QIBLA_URL")}\"")
+        buildConfigField("String", "QIBLA_URL_ID", "\"${properties.getProperty("QIBLA_URL_ID")}\"")
+        buildConfigField("String", "QIBLA_URL_EN", "\"${properties.getProperty("QIBLA_URL_EN")}\"")
     }
 
     buildTypes {
@@ -131,5 +134,8 @@ dependencies {
     //Location
     implementation ("com.google.android.gms:play-services-location:21.1.0")
     implementation ("com.google.accompanist:accompanist-permissions:0.23.1")
+
+//    agent web
+    implementation ("com.github.Justson.AgentWeb:agentweb-core:v4.1.9-androidx")
 
 }

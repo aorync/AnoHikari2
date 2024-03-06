@@ -41,12 +41,15 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.syntxr.anohikari2.presentation.AnoHikariSharedViewModel
 import com.syntxr.anohikari2.R
+import com.syntxr.anohikari2.data.kotpref.UserPreferences
 import com.syntxr.anohikari2.presentation.destinations.ReadScreenDestination
+import com.syntxr.anohikari2.presentation.destinations.SearchScreenDestination
 import com.syntxr.anohikari2.presentation.home.bookmark.BookmarkPage
 import com.syntxr.anohikari2.presentation.home.component.HomeHeader
 import com.syntxr.anohikari2.presentation.home.jozz.JozzPage
 import com.syntxr.anohikari2.presentation.home.sora.SoraPage
 import com.syntxr.anohikari2.presentation.read.ReadScreenNavArgs
+import com.syntxr.anohikari2.utils.AppGlobalState
 import kotlinx.coroutines.launch
 
 @RootNavGraph(start = true)
@@ -59,8 +62,11 @@ fun HomeScreen(
     openDrawer: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
     sharedViewModel: AnoHikariSharedViewModel,
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
 ) {
+
+    AppGlobalState.drawerGesture = true
+//    UserPreferences.drawerGesture = true
 
     val state = viewModel.state.value
     val lazyColumnState = rememberLazyListState()
@@ -69,7 +75,7 @@ fun HomeScreen(
         mutableStateOf(true)
     }
 
-    LaunchedEffect(key1 = state){
+    LaunchedEffect(key1 = state) {
         state.soras?.let { sharedViewModel.setAyahs(it) }
     }
 
@@ -107,7 +113,7 @@ fun HomeScreen(
                     lazyState = lazyColumnState,
                     jozzes = state.jozzes ?: emptyList(),
                     modifier = Modifier.fillMaxSize(),
-                    navigation = {soraNo, jozzNo, indexType, scrollPos ->
+                    navigation = { soraNo, jozzNo, indexType, scrollPos ->
                         navigator.navigate(
                             ReadScreenDestination(
                                 ReadScreenNavArgs(
@@ -128,8 +134,8 @@ fun HomeScreen(
                 BookmarkPage(
                     lazyState = lazyColumnState,
                     bookmarks = state.bookmarks ?: emptyList(),
-                    deleteBookmark = { bookmark -> viewModel.deleteBookmark(bookmark)  },
-                    navigation = {soraNo, jozzNo, indexType, scrollPos ->
+                    deleteBookmark = { bookmark -> viewModel.deleteBookmark(bookmark) },
+                    navigation = { soraNo, jozzNo, indexType, scrollPos ->
                         navigator.navigate(
                             ReadScreenDestination(
                                 ReadScreenNavArgs(
@@ -163,6 +169,11 @@ fun HomeScreen(
                 lazyListState = lazyColumnState,
                 time = viewModel.getTime(),
                 openDrawer = openDrawer,
+                navigateToSearch = {
+                    navigator.navigate(
+                        SearchScreenDestination
+                    )
+                },
                 navigateLastReadToRead = { soraNo, jozzNo, indexType, scrollPos ->
                     navigator.navigate(
                         ReadScreenDestination(

@@ -15,14 +15,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
+import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import com.syntxr.anohikari2.data.kotpref.UserPreferences
 import com.syntxr.anohikari2.presentation.adzan.AdzanScreen
 import com.syntxr.anohikari2.presentation.component.AppDrawer
 import com.syntxr.anohikari2.presentation.destinations.AdzanScreenDestination
+import com.syntxr.anohikari2.presentation.destinations.DirectionDestination
 import com.syntxr.anohikari2.presentation.destinations.HomeScreenDestination
+import com.syntxr.anohikari2.presentation.destinations.QiblaScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.ReadScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.SettingsScreenDestination
 import com.syntxr.anohikari2.presentation.home.HomeScreen
+import com.syntxr.anohikari2.presentation.qibla.QiblaScreen
 import com.syntxr.anohikari2.presentation.read.ReadScreen
 import com.syntxr.anohikari2.presentation.settings.SettingsScreen
 import com.syntxr.anohikari2.utils.AppGlobalState
@@ -37,17 +41,6 @@ fun AnoHikariApp(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val sharedViewModel : AnoHikariSharedViewModel = viewModel(LocalContext.current as ComponentActivity)
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-        LocalContext.current.getSystemService(LocaleManager::class.java)
-            .applicationLocales.also {
-                AppGlobalState.currentLanguage = it.toLanguageTags()
-            }
-    }else{
-        AppCompatDelegate.getApplicationLocales().also {
-            AppGlobalState.currentLanguage = it.toLanguageTags()
-        }
-    }
-
     ModalNavigationDrawer(
         drawerContent = {
             AppDrawer(
@@ -56,7 +49,7 @@ fun AnoHikariApp(
             )
         },
         drawerState = drawerState,
-        gesturesEnabled = false
+        gesturesEnabled = AppGlobalState.drawerGesture
     ) {
         DestinationsNavHost(
             navGraph = NavGraphs.root,
@@ -82,6 +75,9 @@ fun AnoHikariApp(
             }
             composable(AdzanScreenDestination){
                 AdzanScreen(navigator = destinationsNavigator)
+            }
+            composable(QiblaScreenDestination){
+                QiblaScreen(navigator = destinationsNavigator)
             }
         }
     }

@@ -12,4 +12,10 @@ interface QoranRepository {
     fun getSoraAya(soraNo: Int): Flow<List<Qoran>>
     fun getJozzAya(jozzNo: Int): Flow<List<Qoran>>
 
+    fun searchAya(search: String) : Flow<List<Qoran>>
+
+    fun searchAyaId(search: String) : Flow<List<Qoran>>
+
+    fun searchAyaEn(search: String) : Flow<List<Qoran>>
+
 }

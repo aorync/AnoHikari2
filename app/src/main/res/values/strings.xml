@@ -33,4 +33,7 @@
     <string name="txt_err_else">Ups, ada yang salah</string>
     <string name="txt_retry_err">Coba lagi ?</string>
     <string name="txt_msg_location_to_usr">Nyalakan lokasi anda terlebih dahulu.</string>
+    <string name="txt_search_aya_idle">Mau mencari ayat ?</string>
+    <string name="txt_search_title">Cari Ayat</string>
+    <string name="txt_qibla_title">Cari Kiblat</string>
 </resources>

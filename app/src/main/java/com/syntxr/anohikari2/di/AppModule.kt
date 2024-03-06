@@ -41,6 +41,25 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideExternalCoroutineScope(): CoroutineScope {
+        return CoroutineScope(Dispatchers.IO)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationClient(
+        app: Application,
+        coroutineScope: CoroutineScope,
+    ): LocationClient {
+        return LocationClientImpl(
+            app,
+            coroutineScope,
+            LocationServices.getFusedLocationProviderClient(app.applicationContext)
+        )
+    }
+
+    @Provides
+    @Singleton
     fun provideQoranDatabase(
         @ApplicationContext context: Context,
     ): QoranDatabase {
@@ -132,24 +151,5 @@ object AppModule {
     @Singleton
     fun providePlayerClient(@ApplicationContext context: Context): PlayerClient {
         return PlayerClient.newInstance(context, MyPlayerService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideExternalCoroutineScope(): CoroutineScope {
-        return CoroutineScope(Dispatchers.IO)
-    }
-
-    @Provides
-    @Singleton
-    fun provideLocationClient(
-        app: Application,
-        coroutineScope: CoroutineScope,
-    ): LocationClient {
-        return LocationClientImpl(
-            app,
-            coroutineScope,
-            LocationServices.getFusedLocationProviderClient(app.applicationContext)
-        )
     }
 }

@@ -37,4 +37,16 @@ class QoranUseCase(
         return repository.getJozzAya(jozzNo)
     }
 
+    fun searchAya(search: String) : Flow<List<Qoran>>{
+        return repository.searchAya(search)
+    }
+
+    fun searchAyaId(search: String) : Flow<List<Qoran>>{
+        return repository.searchAyaId(search)
+    }
+
+    fun searchAyaEn(search: String) : Flow<List<Qoran>>{
+        return repository.searchAyaEn(search)
+    }
+
 }
