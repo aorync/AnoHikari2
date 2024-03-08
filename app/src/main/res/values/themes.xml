@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.AnoHikari2" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.AnoHikari" parent="Theme.AppCompat.NoActionBar" />
+
+    <style name="Theme.SplashScreen.AnoHikari" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#121212</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_quran_hikari</item>
+        <item name="postSplashScreenTheme">@style/Theme.AnoHikari</item>
+    </style>
 </resources>

@@ -31,13 +31,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AnoHikari2"
+        android:theme="@style/Theme.SplashScreen.AnoHikari"
         android:localeConfig="@xml/locales_config"
         tools:targetApi="34">
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+            android:theme="@style/Theme.SplashScreen.AnoHikari">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

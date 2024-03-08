@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Our Qoran</string>
+    <string name="app_name" translatable="false">Kore Qoran</string>
     <string name="txt_recent_aya">Baru Dibaca</string>
     <string name="txt_no_recent_aya">Anda Belum Membaca</string>
     <string name="txt_sora">Surah</string>
@@ -36,4 +36,18 @@
     <string name="txt_search_aya_idle">Mau mencari ayat ?</string>
     <string name="txt_search_title">Cari Ayat</string>
     <string name="txt_qibla_title">Cari Kiblat</string>
+    <string name="txt_welcome_boarding">Halo, selamat datang!</string>
+    <string name="txt_next_start_boarding">Lanjut untuk memulai!</string>
+    <string name="txt_language_boarding">Aplikasi ini mendukung bahasa Indonesia dan Inggris</string>
+    <string name="txt_qori_boarding">Terdapat variasi qari yang bisa anda gunakan</string>
+    <string name="txt_theme_boarding">Anda dapat merubah tema aplikasi menjadi terang atau gelap</string>
+    <string name="txt_finish_boarding">Selesai!</string>
+    <string name="txt_continue_boarding">Ayo gunakan aplikasi ini!</string>
+    <string name="txt_previous_boarding">Sebelumnya</string>
+    <string name="txt_next_boarding">Selanjutnya</string>
+    <string name="txt_finished_boarding">Selesai</string>
+    <string name="txt_unknown_location">Tidak Diketahui</string>
+    <string name="txt_unknown_advance_location">Terjadi kesalahan dalam mengambil lokasi</string>
+    <string name="txt_surah_more_search">Lihat Selebihnya</string>
+    <string name="txt_surah_less_search">Lihat Sedikit</string>
 </resources>

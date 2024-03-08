@@ -1,6 +1,8 @@
 package com.syntxr.anohikari2.presentation.adzan
 
 import android.Manifest
+import android.location.Geocoder
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +41,7 @@ import com.syntxr.anohikari2.R
 import com.syntxr.anohikari2.presentation.adzan.component.AdzanCard
 import com.syntxr.anohikari2.presentation.adzan.component.AdzanLocationCard
 import com.syntxr.anohikari2.utils.AppGlobalState
-import kotlinx.coroutines.CoroutineScope
+import java.util.Locale
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Destination
@@ -51,8 +53,7 @@ fun AdzanScreen(
     AppGlobalState.drawerGesture = false
     val context = LocalContext.current
     val state by viewModel.state.collectAsState()
-    val currentLocation = viewModel.currentLocation
-    val locality = viewModel.locality
+    val isLoading by viewModel.isLoading.collectAsState()
     val locationPermission = rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -61,10 +62,10 @@ fun AdzanScreen(
     )
 
     if (!locationPermission.allPermissionsGranted) {
-        LaunchedEffect(key1 = true){
+        LaunchedEffect(key1 = true) {
             locationPermission.launchMultiplePermissionRequest()
         }
-    }else{
+    } else {
         LaunchedEffect(true) {
             viewModel.getLocation(context)
         }
@@ -92,19 +93,79 @@ fun AdzanScreen(
                 .fillMaxSize()
         ) {
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            if (!currentLocation.isNullOrEmpty() && !locality.isNullOrEmpty()) {
-                AdzanLocationCard(locality = locality, currentLocation = currentLocation)
+            viewModel.currentLocation.collectAsState().let {
+                @Suppress("DEPRECATION") val address = Geocoder(
+                    context,
+                    Locale.getDefault()
+                ).getFromLocation(
+                    it.value.latitude,
+                    it.value.longitude,
+                    1,
+                )
+                if (!address.isNullOrEmpty()) {
+                    val locality = address.first().locality
+                    val currentLocation =
+                        "${address.first().locality}, ${address.first().subLocality}, ${address.first().subAdminArea}"
+                    AdzanLocationCard(locality = locality, currentLocation = currentLocation)
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
 
             viewModel.uiEvent.collectAsState().let { event ->
-                when (val state = event.value) {
+                when (val currentState = event.value) {
                     is AdzanUiEvent.ShowErrorMessage -> {
-                        Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, currentState.message, Toast.LENGTH_SHORT).show()
+                        AdzanLocationCard(locality = stringResource(id = R.string.txt_unknown_location), currentLocation = stringResource(
+                            id = R.string.txt_unknown_advance_location
+                        ))
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        val shalatTime = state.adzans
+                        Log.d("FREEEBIRD", "AdzanScreen: $shalatTime")
+                        if (shalatTime != null) {
+                            Column(
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                AdzanCard(
+                                    shalatName = "Shubuh",
+                                    shalatTime = shalatTime.fajr
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                AdzanCard(
+                                    shalatName = "Dhuhur",
+                                    shalatTime = shalatTime.dhuhr
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                AdzanCard(shalatName = "Ashar", shalatTime = shalatTime.asr)
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                AdzanCard(
+                                    shalatName = "Maghrib",
+                                    shalatTime = shalatTime.maghrib
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                AdzanCard(shalatName = "Isha", shalatTime = shalatTime.isha)
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                        } else {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.txt_err_else),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+                        }
                     }
 
                     AdzanUiEvent.Idle -> {
@@ -126,35 +187,65 @@ fun AdzanScreen(
                             }
                         }
                     }
-                }
-            }
 
-            viewModel.state.value.isLoading.let {
-                when (it) {
-                    true -> CircularProgressIndicator()
-                    false -> {
-                        if (!state.adzans.isNullOrEmpty()) {
-                            val shalatTime = state.adzans.first()
+                    AdzanUiEvent.GetData -> {
+                        when (isLoading) {
+                            true -> {
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    CircularProgressIndicator()
+                                }
+                            }
+                            false -> {
+                                val shalatTime = state.adzans
+                                if (shalatTime != null) {
+                                    Column(
+                                        modifier = Modifier.fillMaxSize()
+                                    ) {
+                                        AdzanCard(
+                                            shalatName = "Shubuh",
+                                            shalatTime = shalatTime.fajr
+                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
 
-                            Column(
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                AdzanCard(shalatName = "Shubuh", shalatTime = shalatTime.fajr)
-                                Spacer(modifier = Modifier.height(8.dp))
+                                        AdzanCard(
+                                            shalatName = "Dhuhur",
+                                            shalatTime = shalatTime.dhuhr
+                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
 
-                                AdzanCard(shalatName = "Dhuhur", shalatTime = shalatTime.dhuhr)
-                                Spacer(modifier = Modifier.height(8.dp))
+                                        AdzanCard(shalatName = "Ashar", shalatTime = shalatTime.asr)
+                                        Spacer(modifier = Modifier.height(8.dp))
 
-                                AdzanCard(shalatName = "Ashar", shalatTime = shalatTime.asr)
-                                Spacer(modifier = Modifier.height(8.dp))
+                                        AdzanCard(
+                                            shalatName = "Maghrib",
+                                            shalatTime = shalatTime.maghrib
+                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
 
-                                AdzanCard(shalatName = "Maghrib", shalatTime = shalatTime.maghrib)
-                                Spacer(modifier = Modifier.height(8.dp))
-
-                                AdzanCard(shalatName = "Isha", shalatTime = shalatTime.isha)
-                                Spacer(modifier = Modifier.height(8.dp))
+                                        AdzanCard(shalatName = "Isha", shalatTime = shalatTime.isha)
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                    }
+                                }
+                                else {
+                                    Column(
+                                        modifier = Modifier.fillMaxSize(),
+                                        verticalArrangement = Arrangement.Center,
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text(
+                                            text = stringResource(id = R.string.txt_err_else),
+                                            style = MaterialTheme.typography.titleMedium,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                }
                             }
                         }
+
                     }
                 }
             }

@@ -12,18 +12,15 @@ class AdzanRepositoryImpl(
     private val api: AdzanApi,
     private val dao: AdzanDao,
 ) : AdzanRepository {
-    override fun getAdzan(latitude: Double, longitude: Double): Flow<Resource<List<Adzan>>> = flow {
-        emit(Resource.Loading())
+    override fun getAdzan(latitude: Double, longitude: Double): Flow<Resource<Adzan>> = flow {
 
-        val cachedData = dao.getDataCache().map { it.toAdzan() }
-        emit(Resource.Success(data = cachedData))
-
+        val cachedData = dao.getDataCache()
         try {
             val remoteAdzans = api.getAdzans(latitude.toString(), longitude.toString())
-            dao.clear()
-            dao.upsertAll(remoteAdzans.map { it.toAdzanEntity() })
+            dao.upsertAll(remoteAdzans.toAdzanEntity())
+            emit(Resource.Success(remoteAdzans.toAdzanEntity().toAdzan()))
         } catch (e: Exception) {
-            emit(Resource.Error(data = cachedData, message = e.message ?: ""))
+            emit(Resource.Error(data = cachedData.toAdzan(), message = e.message ?: ""))
         }
     }
 }

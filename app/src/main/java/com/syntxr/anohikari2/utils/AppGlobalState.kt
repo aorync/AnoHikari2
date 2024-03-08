@@ -12,4 +12,5 @@ object AppGlobalState {
     var isTajweed by mutableStateOf(UserPreferences.isTajweed)
     var currentLanguage by mutableStateOf(UserPreferences.currentLanguage.tag)
     var drawerGesture by mutableStateOf(UserPreferences.drawerGesture)
+    var isOnBoarding by mutableStateOf(UserPreferences.isOnBoarding)
 }

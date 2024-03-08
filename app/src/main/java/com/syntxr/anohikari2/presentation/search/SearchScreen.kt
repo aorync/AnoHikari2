@@ -22,6 +22,7 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -44,6 +45,7 @@ import com.syntxr.anohikari2.presentation.destinations.ReadScreenDestination
 import com.syntxr.anohikari2.presentation.read.AYA_BY_SORA
 import com.syntxr.anohikari2.presentation.read.ReadScreenNavArgs
 import com.syntxr.anohikari2.presentation.search.component.SearchItem
+import com.syntxr.anohikari2.presentation.search.component.SearchSoraItem
 import com.syntxr.anohikari2.utils.AppGlobalState
 import com.syntxr.anohikari2.utils.Converters
 
@@ -57,6 +59,7 @@ fun SearchScreen(
     AppGlobalState.drawerGesture = false
     val uiState by viewModel.uiState.collectAsState()
     val ayaMatched by viewModel.ayaMatched.collectAsState()
+    val soraMatched by viewModel.soraMatched.collectAsState()
 
     var queryState by remember {
         mutableStateOf("")
@@ -66,6 +69,13 @@ fun SearchScreen(
         mutableStateOf(false)
     }
 
+    var isSurahShow by remember {
+        mutableStateOf(false)
+    }
+
+    val soraItems =
+        if (isSurahShow) soraMatched.distinctBy { it.soraEn } else soraMatched.distinctBy { it.soraEn }
+            .take(5)
     val snackBarHostState = SnackbarHostState()
 
     Scaffold(
@@ -154,31 +164,126 @@ fun SearchScreen(
                         LazyColumn(
                             modifier = Modifier.fillMaxSize()
                         ) {
+
+                            items(soraItems) { qoran ->
+                                SearchSoraItem(
+                                    soraEn =
+                                    AnnotatedString.Builder().run {
+                                        val sorasEn = qoran.soraEn ?: ""
+
+                                        val start = sorasEn.indexOf(queryState)
+                                        val end = start + queryState.length
+
+                                        if (sorasEn.contains(queryState, true)){
+                                            addStyle(SpanStyle(background = MaterialTheme.colorScheme.primaryContainer), start, end)
+                                        }
+                                        append(sorasEn)
+
+                                        toAnnotatedString()
+                                    },
+                                    soraAr = AnnotatedString.Builder().run {
+                                        val sorasAr = qoran.soraAr ?: ""
+
+                                        val start = sorasAr.indexOf(queryState)
+                                        val end = start + queryState.length
+
+                                        if (sorasAr.contains(queryState, true)){
+                                            addStyle(SpanStyle(background = MaterialTheme.colorScheme.primaryContainer), start, end)
+                                        }
+                                        append(sorasAr)
+
+
+                                        toAnnotatedString()
+                                    },
+                                    modifier = Modifier.clickable {
+                                        navigator.navigate(
+                                            ReadScreenDestination(
+                                                ReadScreenNavArgs(
+                                                    soraNumber = qoran.soraNo,
+                                                    jozzNumber = qoran.jozz,
+                                                    indexType = AYA_BY_SORA,
+                                                    scrollPosition = null
+                                                )
+                                            )
+                                        )
+                                    }
+                                )
+                            }
+
+                            item {
+                                TextButton(onClick = {
+                                    isSurahShow = !isSurahShow
+                                }) {
+                                    Text(
+                                        text = stringResource(id = if (isSurahShow) R.string.txt_surah_less_search else R.string.txt_surah_more_search )
+                                    )
+                                }
+                            }
+
                             items(ayaMatched) { qoran ->
                                 SearchItem(
-                                    ayaText = qoran.ayaText ?: ""
-                                    ,
-                                    translation =
-                                    AnnotatedString.Builder().run {
-                                        val translations = if (AppGlobalState.currentLanguage == UserPreferences.Language.ID.tag)
-                                            qoran.translationId?.split("")
-                                        else
-                                            Converters.replaceTranslation(qoran.translationEn ?: "").split("")
+                                    ayaText = AnnotatedString.Builder().run {
+                                        val ayas = qoran.ayaText ?: ""
 
-                                        if (translations != null) {
-                                            for (translation in translations){
-                                                val trimmedTranslation = translation.trim{it <= ' '}
-                                                val highlighted = trimmedTranslation.contentEquals(queryState, ignoreCase = true)
-                                                if (highlighted){
+                                        if (queryState.length == 1){
+                                            for (word in ayas.split("")){
+                                                val trim = word.trim(' ')
+                                                val matched = trim.contains(queryState, false)
+                                                if (matched){
                                                     pushStyle(SpanStyle(background = MaterialTheme.colorScheme.primaryContainer))
                                                 }
-
-                                                append("$translation")
-                                                if (highlighted){
+                                                append(word)
+                                                if (matched){
+                                                    pop()
+                                                }
+                                            }
+                                        }else{
+                                            for (word in ayas.split(" ")){
+                                                if (word.contains(queryState, true)){
+                                                    pushStyle(SpanStyle(background = MaterialTheme.colorScheme.primaryContainer))
+                                                }
+                                                append("$word ")
+                                                if (word.contains(queryState, true)){
                                                     pop()
                                                 }
                                             }
                                         }
+
+
+                                        toAnnotatedString()
+                                    },
+                                    translation =
+                                    AnnotatedString.Builder().run {
+                                        val translations =
+                                            if (AppGlobalState.currentLanguage == UserPreferences.Language.ID.tag)
+                                                qoran.translationId ?: ""
+                                            else
+                                                    qoran.translationEn ?: ""
+
+                                        if (queryState.length == 1){
+                                            for (word in translations.split("")){
+                                                val trim = word.trim(' ')
+                                                val matched = trim.contains(queryState, false)
+                                                if (matched){
+                                                    pushStyle(SpanStyle(background = MaterialTheme.colorScheme.primaryContainer))
+                                                }
+                                                append(word)
+                                                if (matched){
+                                                    pop()
+                                                }
+                                            }
+                                        }else{
+                                            for (word in translations.split(" ")){
+                                                if (word.contains(queryState, true)){
+                                                    pushStyle(SpanStyle(background = MaterialTheme.colorScheme.primaryContainer))
+                                                }
+                                                append("$word ")
+                                                if (word.contains(queryState, true)){
+                                                    pop()
+                                                }
+                                            }
+                                        }
+
 
                                         toAnnotatedString()
                                     },

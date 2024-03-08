@@ -25,6 +25,10 @@ class SearchViewModel @Inject constructor(
 
     private val _ayaMatched = MutableStateFlow(emptyList<Qoran>())
     val ayaMatched = _ayaMatched.asStateFlow()
+
+    private val _soraMatched = MutableStateFlow(emptyList<Qoran>())
+    val soraMatched = _soraMatched.asStateFlow()
+
     fun onEvent(event: SearchEvent) {
         when (event) {
             SearchEvent.Clear -> {
@@ -38,11 +42,16 @@ class SearchViewModel @Inject constructor(
                 viewModelScope.launch {
                     try {
                         _uiState.emit(SearchUiState.Loading)
-                        val data =
+
+                        val soraData = quranUseCase.searchSora(event.query).stateIn(this).value
+                        val ayaData =
                             if (AppGlobalState.currentLanguage == UserPreferences.Language.ID.tag)
                                 quranUseCase.searchAyaId(event.query).stateIn(this).value
                             else quranUseCase.searchAyaEn(event.query).stateIn(this).value
-                        _ayaMatched.emit(data)
+
+                        _soraMatched.emit(soraData)
+                        _ayaMatched.emit(ayaData)
+
                         _uiState.emit(SearchUiState.Success)
                     } catch (e: Exception) {
                         _uiState.emit(SearchUiState.Error(e.message ?: ""))

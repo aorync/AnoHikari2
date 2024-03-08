@@ -9,5 +9,5 @@ interface AdzanApi {
     suspend fun getAdzans(
         @Query("latitude") latitude : String,
         @Query("longitude") longitude : String
-    ): List<AdzanResponse>
+    ): AdzanResponse
 }

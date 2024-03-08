@@ -9,6 +9,8 @@ import android.text.style.StyleSpan
 import android.text.style.URLSpan
 import android.text.style.UnderlineSpan
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -62,7 +64,7 @@ object Converters {
 
 }
 
-fun IntToUrlThreeDigits(int: Int): String {
+fun intToUrlThreeDigits(int: Int): String {
     return String.format("%03d", int)
 }
 
@@ -87,10 +89,11 @@ data class JozzSoras(
     val sorasNo: List<Int?>,
     val ayasNo: List<Int?>,
 )
+
 fun Spannable.toAnnotatedString(primaryColor: Color): AnnotatedString {
     val builder = AnnotatedString.Builder(this.toString())
     val copierContext = CopierContext(primaryColor)
-    SpanCopier.values().forEach { copier ->
+    SpanCopier.entries.forEach { copier ->
         getSpans(0, length, copier.spanClass).forEach { span ->
             copier.copySpan(span, getSpanStart(span), getSpanEnd(span), builder, copierContext)
         }

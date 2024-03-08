@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class AdzanUseCase(
     private val repository: AdzanRepository
 ) {
-    fun getAdzans(latitude: Double, longitude: Double) : Flow<Resource<List<Adzan>>> {
+    fun getAdzans(latitude: Double, longitude: Double) : Flow<Resource<Adzan>> {
         return repository.getAdzan(latitude, longitude)
     }
 }

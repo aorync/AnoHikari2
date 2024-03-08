@@ -39,9 +39,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.syntxr.anohikari2.presentation.AnoHikariSharedViewModel
 import com.syntxr.anohikari2.R
-import com.syntxr.anohikari2.data.kotpref.UserPreferences
+import com.syntxr.anohikari2.presentation.AnoHikariSharedViewModel
 import com.syntxr.anohikari2.presentation.destinations.ReadScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.SearchScreenDestination
 import com.syntxr.anohikari2.presentation.home.bookmark.BookmarkPage
@@ -66,7 +65,6 @@ fun HomeScreen(
 ) {
 
     AppGlobalState.drawerGesture = true
-//    UserPreferences.drawerGesture = true
 
     val state = viewModel.state.value
     val lazyColumnState = rememberLazyListState()

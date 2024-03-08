@@ -36,5 +36,20 @@
     <string name="txt_search_aya_idle">Want to search ayah ?</string>
     <string name="txt_search_title">Ayah Search</string>
     <string name="txt_qibla_title">Qibla Finder</string>
+    <string name="txt_welcome_boarding">Hello, welcome!</string>
+    <string name="txt_next_start_boarding">Next to start!</string>
+    <string name="txt_language_boarding">This application support English and Indonesian language</string>
+    <string name="txt_qori_boarding">There are various types of reciter that you can use</string>
+    <string name="txt_theme_boarding">You can switch the application theme to light or dark</string>
+    <string name="txt_finish_boarding">Finished!</string>
+    <string name="txt_continue_boarding">Let\'s use this application!</string>
+    <string name="txt_previous_boarding">Previous</string>
+    <string name="txt_next_boarding">Next</string>
+    <string name="txt_finished_boarding">Finish</string>
+    <string name="txt_unknown_location">Unknown</string>
+    <string name="txt_unknown_advance_location">There is an error when get location</string>
+    <string name="txt_surah_more_search">Show More</string>
+    <string name="txt_surah_less_search">Show Less</string>
+
 
 </resources>

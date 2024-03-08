@@ -5,5 +5,5 @@ import com.syntxr.anohikari2.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface AdzanRepository {
-    fun getAdzan(latitude: Double, longitude: Double): Flow<Resource<List<Adzan>>>
+    fun getAdzan(latitude: Double, longitude: Double): Flow<Resource<Adzan>>
 }

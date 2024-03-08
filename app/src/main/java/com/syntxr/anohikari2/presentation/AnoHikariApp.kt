@@ -1,9 +1,6 @@
 package com.syntxr.anohikari2.presentation
 
-import android.app.LocaleManager
-import android.os.Build
 import androidx.activity.ComponentActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
@@ -15,13 +12,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
-import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
-import com.syntxr.anohikari2.data.kotpref.UserPreferences
 import com.syntxr.anohikari2.presentation.adzan.AdzanScreen
 import com.syntxr.anohikari2.presentation.component.AppDrawer
 import com.syntxr.anohikari2.presentation.destinations.AdzanScreenDestination
-import com.syntxr.anohikari2.presentation.destinations.DirectionDestination
 import com.syntxr.anohikari2.presentation.destinations.HomeScreenDestination
+import com.syntxr.anohikari2.presentation.destinations.OnBoardingScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.QiblaScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.ReadScreenDestination
 import com.syntxr.anohikari2.presentation.destinations.SettingsScreenDestination
@@ -43,10 +38,12 @@ fun AnoHikariApp(
 
     ModalNavigationDrawer(
         drawerContent = {
-            AppDrawer(
-                navController = navController,
-                closeDrawer = { scope.launch { drawerState.close() } }
-            )
+            if (!AppGlobalState.isOnBoarding){
+                AppDrawer(
+                    navController = navController,
+                    closeDrawer = { scope.launch { drawerState.close() } }
+                )
+            }
         },
         drawerState = drawerState,
         gesturesEnabled = AppGlobalState.drawerGesture
@@ -56,6 +53,18 @@ fun AnoHikariApp(
             navController = navController
         ){
             composable(HomeScreenDestination){
+
+                if (AppGlobalState.isOnBoarding){
+                    destinationsNavigator.navigate(OnBoardingScreenDestination){
+                        popUpTo(OnBoardingScreenDestination.route){
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = false
+                        launchSingleTop = true
+                    }
+                }
+
                 HomeScreen(
                     openDrawer = { scope.launch { drawerState.open() } },
                     navigator = destinationsNavigator,

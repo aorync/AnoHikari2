@@ -1,6 +1,8 @@
 package com.syntxr.anohikari2.presentation.read
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
@@ -8,13 +10,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.syntxr.anohikari2.R
+import com.syntxr.anohikari2.data.kotpref.UserPreferences
 import com.syntxr.anohikari2.data.source.local.bookmark.entity.Bookmark
 import com.syntxr.anohikari2.data.source.local.qoran.entity.Qoran
 import com.syntxr.anohikari2.domain.usecase.AppUseCase
 import com.syntxr.anohikari2.presentation.navArgs
 import com.syntxr.anohikari2.utils.AppGlobalActions
+import com.syntxr.anohikari2.utils.AppGlobalState
 import com.syntxr.anohikari2.utils.Converters
-import com.syntxr.anohikari2.utils.IntToUrlThreeDigits
+import com.syntxr.anohikari2.utils.intToUrlThreeDigits
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -64,6 +68,11 @@ class ReadViewModel @Inject constructor(
 
     private val _state = mutableStateOf(ReadAyaState())
     val state: State<ReadAyaState> = _state
+
+    private val errorPlay = if (AppGlobalState.currentLanguage == UserPreferences.Language.ID.tag)
+        "Turn on your network first!"
+    else
+        "Nyalakan internet anda terlebih dahulu!"
 
     private var getAyaJob: Job? = null
 
@@ -132,23 +141,36 @@ class ReadViewModel @Inject constructor(
             }
 
             is ReadEvent.PlayAyaAudio -> {
-                playerClient.stop()
-                val musicItem = Converters.createMusicItem(
-                    title = "${event.soraEn} - ${event.ayaNo}",
-                    ayaNo = IntToUrlThreeDigits(event.ayaNo),
-                    soraNo = IntToUrlThreeDigits(event.soraNo)
-                )
-                val playlist = Playlist.Builder().append(musicItem).build()
-                playerClient.connect {
-                    playerClient.setPlaylist(playlist, true)
-                    playerClient.playMode = PlayMode.SINGLE_ONCE
-                    playMode.value = PlayMode.SINGLE_ONCE
-                    _currentAyaPlayId.value = event.id
-                    _currentAyaPlayName.value = "${event.soraEn} - ${event.ayaNo}"
-                    playType.value = PlayType.SINGLE
-                }
-                if (playerClient.isError){
-                    viewModelScope.launch { _uiEvent.emit(ReadUiEvent.PlayerError(playerClient.errorMessage)) }
+                getNetwork(event.context).let {
+                    when(it){
+                        true -> {
+                            playerClient.stop()
+                            val musicItem = Converters.createMusicItem(
+                                title = "${event.soraEn} - ${event.ayaNo}",
+                                ayaNo = intToUrlThreeDigits(event.ayaNo),
+                                soraNo = intToUrlThreeDigits(event.soraNo)
+                            )
+                            val playlist = Playlist.Builder().append(musicItem).build()
+                            playerClient.connect {
+                                playerClient.setPlaylist(playlist, true)
+                                playerClient.playMode = PlayMode.SINGLE_ONCE
+                                playMode.value = PlayMode.SINGLE_ONCE
+                                _currentAyaPlayId.value = event.id
+                                _currentAyaPlayName.value = "${event.soraEn} - ${event.ayaNo}"
+                                playType.value = PlayType.SINGLE
+                            }
+                            if (playerClient.isError){
+                                viewModelScope.launch { _uiEvent.emit(ReadUiEvent.PlayerError(playerClient.errorMessage)) }
+                            } else {}
+                        }
+                        false -> {
+                            viewModelScope.launch {
+                                _uiEvent.emit(ReadUiEvent.PlayerError(
+                                    errorPlay
+                                ))
+                            }
+                        }
+                    }
                 }
             }
 
@@ -160,34 +182,45 @@ class ReadViewModel @Inject constructor(
             }
 
             is ReadEvent.PlayAllAudio -> {
-                playerClient.stop()
-                val musicItems = mutableListOf<MusicItem>()
-                event.ayas.forEach { qoran ->
-                    val musicItem = Converters.createMusicItem(
-                        title = "${qoran.soraEn} - ${qoran.ayaNo}",
-                        ayaNo = IntToUrlThreeDigits(qoran.ayaNo ?: return@forEach),
-                        soraNo = IntToUrlThreeDigits(qoran.soraNo ?: return@forEach)
-                    )
-                    musicItems.add(musicItem)
-                }
-                val playlist = Playlist.Builder().appendAll(musicItems).build()
-                playerClient.connect {
-                    playerClient.setPlaylist(playlist, true)
-                    playerClient.playMode = PlayMode.PLAYLIST_LOOP
-                    playMode.value = PlayMode.PLAYLIST_LOOP
-                    playType.value = PlayType.ALL
-                    playerClient.addOnPlayingMusicItemChangeListener { _, position, _ ->
-                        _currentAyaPlayId.value = event.ayas[position].id
-                        _currentAyaPlayName.value =
-                            "${event.ayas[position].soraEn} - ${event.ayas[position].ayaNo}"
+                getNetwork(event.context).let {
+                    when(it){
+                        true -> {
+                            playerClient.stop()
+                            val musicItems = mutableListOf<MusicItem>()
+                            event.ayas.forEach { qoran ->
+                                val musicItem = Converters.createMusicItem(
+                                    title = "${qoran.soraEn} - ${qoran.ayaNo}",
+                                    ayaNo = intToUrlThreeDigits(qoran.ayaNo ?: return@forEach),
+                                    soraNo = intToUrlThreeDigits(qoran.soraNo ?: return@forEach)
+                                )
+                                musicItems.add(musicItem)
+                            }
+                            val playlist = Playlist.Builder().appendAll(musicItems).build()
+                            playerClient.connect {
+                                playerClient.setPlaylist(playlist, true)
+                                playerClient.playMode = PlayMode.PLAYLIST_LOOP
+                                playMode.value = PlayMode.PLAYLIST_LOOP
+                                playType.value = PlayType.ALL
+                                playerClient.addOnPlayingMusicItemChangeListener { _, position, _ ->
+                                    _currentAyaPlayId.value = event.ayas[position].id
+                                    _currentAyaPlayName.value =
+                                        "${event.ayas[position].soraEn} - ${event.ayas[position].ayaNo}"
+                                }
+                            }
+                            if (playerClient.isError){
+                                viewModelScope.launch { _uiEvent.emit(ReadUiEvent.PlayerError(playerClient.errorMessage)) }
+                            } else {}
+                        }
+                        false -> {
+                            viewModelScope.launch {
+                                _uiEvent.emit(ReadUiEvent.PlayerError(
+                                    errorPlay
+                                ))
+                            }
+                        }
                     }
                 }
-                if (playerClient.isError){
-                    viewModelScope.launch { _uiEvent.emit(ReadUiEvent.PlayerError(playerClient.errorMessage)) }
-                }
             }
-
-            else -> {}
         }
     }
 
@@ -218,8 +251,6 @@ class ReadViewModel @Inject constructor(
             PlayEvent.Stop -> {
                 playerClient.stop(); playType.value = PlayType.NONE; playerClient.shutdown()
             }
-
-            else -> {}
         }
     }
 
@@ -235,6 +266,23 @@ class ReadViewModel @Inject constructor(
     }
 
     fun isBookmark() = checkBookmark.value
+
+    private fun getNetwork(context: Context) : Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                return true
+            }
+        }
+        return false
+    }
 
 }
 
@@ -265,10 +313,12 @@ sealed class ReadEvent {
         val soraEn: String,
         val ayaNo: Int,
         val soraNo: Int,
+        val context: Context
     ) : ReadEvent()
 
     data class PlayAllAudio(
         val ayas: List<Qoran>,
+        val context: Context
     ) : ReadEvent()
 
     data class InsertBookmark(val bookmark: Bookmark) : ReadEvent()

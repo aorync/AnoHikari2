@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
@@ -44,7 +45,7 @@ fun AdzanCard(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -90,11 +91,13 @@ fun AdzanLocationCard(
                 ) {
 
                     Text(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.weight(1f),
                         text = stringResource(id = R.string.txt_current_location, locality),
                         textAlign = TextAlign.Start,
                         style = MaterialTheme.typography.titleLarge,
                     )
+                    
+                    Spacer(modifier = Modifier.width(8.dp))
 
                     IconButton(
                         onClick = { isShowLocationAdvanced = !isShowLocationAdvanced }

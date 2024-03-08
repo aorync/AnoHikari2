@@ -106,7 +106,7 @@ fun ReadScreen(
                 title = state.title,
                 onPlayAll = {
                     state.ayas?.let {
-                        viewModel.onEvent(ReadEvent.PlayAllAudio(it))
+                        viewModel.onEvent(ReadEvent.PlayAllAudio(it, context))
                     }
                 },
                 backToHome = {
@@ -211,7 +211,8 @@ fun ReadScreen(
                                             id = qoran.id,
                                             soraEn = qoran.soraEn ?: "",
                                             ayaNo = qoran.ayaNo ?: 0,
-                                            soraNo = qoran.soraNo ?: 0
+                                            soraNo = qoran.soraNo ?: 0,
+                                            context = context
                                         )
                                     )
                                 },

@@ -10,6 +10,7 @@ object UserPreferences : KotprefModel() {
     var currentQori by enumOrdinalPref(Qori.ABD_SUDAIS)
     var isTajweed by booleanPref(true)
     var drawerGesture by booleanPref(false)
+    var isOnBoarding by booleanPref(true)
 
     override fun clear() {
         super.clear()
