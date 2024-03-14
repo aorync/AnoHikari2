@@ -5,10 +5,12 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.manualcomposablecalls.composable
@@ -33,6 +35,8 @@ fun AnoHikariApp(
     navController: NavHostController = rememberNavController(),
     scope: CoroutineScope = rememberCoroutineScope()
 ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentState = navBackStackEntry?.destination?.route ?: HomeScreenDestination.route
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val sharedViewModel : AnoHikariSharedViewModel = viewModel(LocalContext.current as ComponentActivity)
 
@@ -46,7 +50,7 @@ fun AnoHikariApp(
             }
         },
         drawerState = drawerState,
-        gesturesEnabled = AppGlobalState.drawerGesture
+        gesturesEnabled = currentState == HomeScreenDestination.route
     ) {
         DestinationsNavHost(
             navGraph = NavGraphs.root,

@@ -61,13 +61,11 @@ fun AdzanScreen(
         )
     )
 
-    if (!locationPermission.allPermissionsGranted) {
-        LaunchedEffect(key1 = true) {
-            locationPermission.launchMultiplePermissionRequest()
-        }
-    } else {
-        LaunchedEffect(true) {
+    LaunchedEffect(key1 = true){
+        if (locationPermission.allPermissionsGranted){
             viewModel.getLocation(context)
+        }else{
+            locationPermission.launchMultiplePermissionRequest()
         }
     }
 
@@ -93,20 +91,25 @@ fun AdzanScreen(
                 .fillMaxSize()
         ) {
 
-            viewModel.currentLocation.collectAsState().let {
-                @Suppress("DEPRECATION") val address = Geocoder(
-                    context,
-                    Locale.getDefault()
-                ).getFromLocation(
-                    it.value.latitude,
-                    it.value.longitude,
-                    1,
-                )
-                if (!address.isNullOrEmpty()) {
-                    val locality = address.first().locality
-                    val currentLocation =
-                        "${address.first().locality}, ${address.first().subLocality}, ${address.first().subAdminArea}"
-                    AdzanLocationCard(locality = locality, currentLocation = currentLocation)
+            viewModel.currentLocation.collectAsState().let { location ->
+                if (location.value.latitude != null && location.value.longitude != null){
+                    @Suppress("DEPRECATION") val address = Geocoder(
+                        context,
+                        Locale.getDefault()
+                    ).getFromLocation(
+                        location.value.latitude,
+                        location.value.longitude,
+                        1,
+                    )
+                    if (!address.isNullOrEmpty()) {
+                        val locality = address.first().locality
+                        val currentLocation =
+                            "${address.first().locality}, ${address.first().subLocality}, ${address.first().subAdminArea}"
+
+                        AdzanLocationCard(locality = locality, currentLocation = currentLocation)
+                    }
+                } else {
+                    Toast.makeText(context, "Unknown Error", Toast.LENGTH_SHORT).show()
                 }
             }
 

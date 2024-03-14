@@ -92,7 +92,7 @@ fun AnoHikariTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colors.onBackground.toArgb()
+            window.statusBarColor = colors.onSurface.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
