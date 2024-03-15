@@ -99,7 +99,7 @@ fun OnBoardingScreen(
                         ) {
                             Text(
                                 text = stringResource(R.string.txt_previous_boarding),
-                                style = MaterialTheme.typography.bodyMedium
+                                style = MaterialTheme.typography.bodySmall
                             )
                         }
                     }
@@ -139,7 +139,7 @@ fun OnBoardingScreen(
                         text = if (pagerState.currentPage < 4) stringResource(R.string.txt_next_boarding) else stringResource(
                             R.string.txt_finished_boarding,
                         ),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             }

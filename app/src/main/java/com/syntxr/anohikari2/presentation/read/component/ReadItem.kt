@@ -139,7 +139,8 @@ fun AyaReadItem(
     onCopyClick: () -> Unit,
     onPlayClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isTajweed: Boolean,
+    footnotes: String,
+    onTranslateClick : (String) -> Unit = {}
 ) {
 
     var bookmarkState by remember {
@@ -185,6 +186,13 @@ fun AyaReadItem(
             }
 
             Spacer(modifier = Modifier.height(12.dp))
+
+            SpannableText(
+                text = translation,
+                onClick = {
+                    onTranslateClick(footnotes)
+                },
+            )
 
             Text(
                 text = translation,

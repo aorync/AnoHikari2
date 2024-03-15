@@ -7,13 +7,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -26,11 +31,12 @@ import com.syntxr.anohikari2.data.kotpref.UserPreferences
 import com.syntxr.anohikari2.data.source.local.bookmark.entity.Bookmark
 import com.syntxr.anohikari2.presentation.read.component.AyaReadItem
 import com.syntxr.anohikari2.presentation.read.component.AyaSoraCard
+import com.syntxr.anohikari2.presentation.read.component.FootNotesBottomSheet
 import com.syntxr.anohikari2.presentation.read.component.ReadAudioControl
 import com.syntxr.anohikari2.presentation.read.component.ReadPlayTopBar
 import com.syntxr.anohikari2.utils.AppGlobalState
-import com.syntxr.anohikari2.utils.Converters.replaceTranslation
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 data class ReadScreenNavArgs(
     val soraNumber: Int?,
@@ -56,6 +62,12 @@ fun ReadScreen(
     val totalAyas = remember {
         sharedViewModel.getAyahs()
     }
+    val bottomSheetState = rememberModalBottomSheetState()
+    var isBottomSheetShowed by remember {
+        mutableStateOf(false)
+    }
+    val scope = rememberCoroutineScope()
+    val footNotesState = remember { mutableStateOf("") }
 
     val context = LocalContext.current
     val isPlaying by viewModel.isAudioPlay.collectAsState()
@@ -171,13 +183,16 @@ fun ReadScreen(
 
                             AyaReadItem(
                                 id = qoran.id,
-                                isTajweed = AppGlobalState.isTajweed,
                                 bookmarks = viewModel.isBookmark(),
                                 ayaText = qoran.ayaText ?: "",
                                 translation = if (AppGlobalState.currentLanguage == UserPreferences.Language.ID.tag)
-                                qoran.translationId ?: ""
+                                    qoran.translationId ?: ""
                                 else
-                                    replaceTranslation( qoran.translationEn ?: ""),
+                                    qoran.translationEn ?: "",
+                                footnotes = if (AppGlobalState.currentLanguage == UserPreferences.Language.ID.tag)
+                                    qoran.footnotesId ?: ""
+                                else
+                                    qoran.footnotesEn ?: "",
                                 soraNo = qoran.soraNo ?: 0,
                                 ayaNo = qoran.ayaNo ?: 0,
                                 onInsertBookmarkClick = {
@@ -223,7 +238,14 @@ fun ReadScreen(
                                         )
                                     )
                                 },
-                                currentPlayAya = currentAyaPlayId
+                                currentPlayAya = currentAyaPlayId,
+                                onTranslateClick = { footnote ->
+                                    footNotesState.value = footnote
+                                    scope.launch {
+                                        bottomSheetState.show()
+                                        isBottomSheetShowed = true
+                                    }
+                                }
                             )
                             with(LastReadPreferences) {
                                 soraName = qoran.soraEn ?: ""
@@ -238,6 +260,28 @@ fun ReadScreen(
                 }
             )
         }
+
+        if (isBottomSheetShowed)
+            ModalBottomSheet(
+                sheetState = bottomSheetState,
+                onDismissRequest = {
+                    scope.launch {
+                        bottomSheetState.hide()
+                        isBottomSheetShowed = false
+                    }
+                },
+                content = {
+                    FootNotesBottomSheet(
+                        footNotesContent = footNotesState.value,
+                        hideBottomSheet = {
+                            scope.launch {
+                                bottomSheetState.hide()
+                                isBottomSheetShowed = false
+                            }
+                        }
+                    )
+                }
+            )
     }
 }
 
