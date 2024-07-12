@@ -14,15 +14,15 @@ room {
 
 
 android {
-    namespace = "com.syntxr.anohikari2"
+    namespace = "com.syntxr.anohikari3"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.syntxr.anohikari2"
+        applicationId = "com.syntxr.anohikari3"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.2"
 
         resourceConfigurations += listOf("in", "en")
 

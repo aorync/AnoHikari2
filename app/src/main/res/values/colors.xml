@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_ghunna">#9c404b</color>
-    <color name="color_qalqala">#552fff</color>
-    <color name="color_iqlab">#006684</color>
-    <color name="color_idgham">#ad3130</color>
-    <color name="color_idghamwo">#8c4382</color>
-    <color name="color_ikhfa">#2b6c00</color>
+    <color name="color_ghunna">#971525</color>
+    <color name="color_qalqala">#220893</color>
+    <color name="color_iqlab">#07475A</color>
+    <color name="color_idgham">#AE1E1C</color>
+    <color name="color_idghamwo">#8A207C</color>
+    <color name="color_ikhfa">#224909</color>
 </resources>
