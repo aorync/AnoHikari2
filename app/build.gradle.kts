@@ -21,7 +21,7 @@ android {
         applicationId = "com.syntxr.anohikari3"
         minSdk = 24
         targetSdk = 34
-        versionCode = 4
+        versionCode = 5
         versionName = "1.3"
 
         resourceConfigurations += listOf("in", "en")
